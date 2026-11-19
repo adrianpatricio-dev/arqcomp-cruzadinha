@@ -1,0 +1,5 @@
+/* Teste: se o fundo ficar azul-claro, o CSS está ligado ao HTML */
+body {
+    background-color: #eef3fb;
+    font-family: Arial, sans-serif;
+}
