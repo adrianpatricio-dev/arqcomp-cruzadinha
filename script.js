@@ -132,3 +132,94 @@ for (let i = 0; i < palavras.length; i++) {
     // Guarda o item dentro da própria palavra, para marcar certo/errado depois
     p.item = item;
 }
+
+
+// ===== PARTE E: botão Conferir e contador de acertos =====
+
+const contador = document.getElementById("contador");
+const botaoConferir = document.getElementById("botao-conferir");
+
+// Começa mostrando zero acertos
+contador.textContent = "0 de " + palavras.length + " palavras";
+
+// Devolve a lista de campos (inputs) de uma palavra, na ordem das letras
+function camposDaPalavra(p) {
+    const lista = [];
+    for (let j = 0; j < p.palavra.length; j++) {
+        if (p.direcao === "H") {
+            lista.push(campos[p.linha][p.coluna + j]);
+        } else {
+            lista.push(campos[p.linha + j][p.coluna]);
+        }
+    }
+    return lista;
+}
+
+// Tira as marcações de certo/errado das casas e das pistas
+function limparMarcacoes() {
+    for (let i = 0; i < palavras.length; i++) {
+        const p = palavras[i];
+        const lista = camposDaPalavra(p);
+        for (let j = 0; j < lista.length; j++) {
+            lista[j].classList.remove("certa", "errada");
+        }
+        p.item.classList.remove("certa", "errada");
+        p.item.textContent = textoDaPista(p);
+    }
+}
+
+function conferir() {
+    limparMarcacoes();
+    let acertos = 0;
+
+    // 1º passo: descobre quais palavras estão certas
+    for (let i = 0; i < palavras.length; i++) {
+        const p = palavras[i];
+        const lista = camposDaPalavra(p);
+
+        // Junta as letras digitadas numa palavra só
+        let digitada = "";
+        for (let j = 0; j < lista.length; j++) {
+            digitada = digitada + lista[j].value.toUpperCase();
+        }
+
+        p.certa = (digitada === p.palavra);
+        if (p.certa) {
+            acertos++;
+        }
+    }
+
+    // 2º passo: marca primeiro as erradas e depois as certas.
+    // Assim, uma casa de cruzamento que faz parte de uma palavra certa fica "certa".
+    for (let i = 0; i < palavras.length; i++) {
+        const p = palavras[i];
+        if (!p.certa) {
+            const lista = camposDaPalavra(p);
+            for (let j = 0; j < lista.length; j++) {
+                lista[j].classList.add("errada");
+            }
+            p.item.classList.add("errada");
+            p.item.textContent = textoDaPista(p) + " ✘";
+        }
+    }
+    for (let i = 0; i < palavras.length; i++) {
+        const p = palavras[i];
+        if (p.certa) {
+            const lista = camposDaPalavra(p);
+            for (let j = 0; j < lista.length; j++) {
+                lista[j].classList.remove("errada");
+                lista[j].classList.add("certa");
+            }
+            p.item.classList.add("certa");
+            p.item.textContent = textoDaPista(p) + " ✔";
+        }
+    }
+
+    // Atualiza o contador
+    contador.textContent = acertos + " de " + palavras.length + " palavras";
+    if (acertos === palavras.length) {
+        contador.textContent = contador.textContent + " — parabéns, você completou tudo!";
+    }
+}
+
+botaoConferir.addEventListener("click", conferir);
