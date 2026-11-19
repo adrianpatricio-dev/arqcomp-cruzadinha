@@ -223,3 +223,28 @@ function conferir() {
 }
 
 botaoConferir.addEventListener("click", conferir);
+
+
+// ===== PARTE F: botão Reiniciar =====
+
+const botaoReiniciar = document.getElementById("botao-reiniciar");
+
+function reiniciar() {
+    // Apaga todas as letras digitadas
+    for (let l = 0; l < LINHAS; l++) {
+        for (let c = 0; c < COLUNAS; c++) {
+            if (campos[l][c] !== null) {
+                campos[l][c].value = "";
+            }
+        }
+    }
+
+    // Tira as cores e as marcas ✔/✘, e zera o contador
+    limparMarcacoes();
+    contador.textContent = "0 de " + palavras.length + " palavras";
+
+    // Volta o cursor para a primeira palavra
+    campos[palavras[0].linha][palavras[0].coluna].focus();
+}
+
+botaoReiniciar.addEventListener("click", reiniciar);
