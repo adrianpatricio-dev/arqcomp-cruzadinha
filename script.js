@@ -4,25 +4,28 @@
 const LINHAS = 16;
 const COLUNAS = 15;
 
-// Cada objeto é uma palavra: onde começa (linha e coluna, contando a partir de 0)
-// e para onde vai ("H" = horizontal, "V" = vertical)
+// Texto provisório das pistas que ainda vão ser escritas
+const PISTA_PENDENTE = "(pista a escrever)";
+
+// Cada objeto é uma palavra: onde começa (linha e coluna, contando a partir de 0),
+// para onde vai ("H" = horizontal, "V" = vertical) e a pista que aparece na tela
 const palavras = [
-    { numero: 1,  palavra: "MEMORIADEMASSA",   linha: 0,  coluna: 2,  direcao: "V" },
-    { numero: 2,  palavra: "MICROCONTROLADOR", linha: 0,  coluna: 11, direcao: "V" },
-    { numero: 3,  palavra: "DMA",              linha: 2,  coluna: 1,  direcao: "H" },
-    { numero: 4,  palavra: "CPU",              linha: 2,  coluna: 11, direcao: "H" },
-    { numero: 5,  palavra: "CACHE",            linha: 3,  coluna: 9,  direcao: "V" },
-    { numero: 6,  palavra: "REGISTRADORES",    linha: 4,  coluna: 2,  direcao: "H" },
-    { numero: 7,  palavra: "EEPROM",           linha: 4,  coluna: 13, direcao: "V" },
-    { numero: 8,  palavra: "ADDRESSBUS",       linha: 5,  coluna: 0,  direcao: "V" },
-    { numero: 9,  palavra: "DATABUS",          linha: 6,  coluna: 4,  direcao: "V" },
-    { numero: 10, palavra: "UC",               linha: 6,  coluna: 6,  direcao: "V" },
-    { numero: 11, palavra: "DUALCORE",         linha: 7,  coluna: 2,  direcao: "H" },
-    { numero: 12, palavra: "RAM",              linha: 7,  coluna: 8,  direcao: "V" },
-    { numero: 13, palavra: "ROM",              linha: 9,  coluna: 11, direcao: "H" },
-    { numero: 14, palavra: "FLASH",            linha: 12, coluna: 9,  direcao: "H" },
-    { numero: 15, palavra: "ULA",              linha: 13, coluna: 0,  direcao: "H" },
-    { numero: 16, palavra: "QUADCORE",         linha: 15, coluna: 5,  direcao: "H" }
+    { numero: 1,  palavra: "MEMORIADEMASSA",   linha: 0,  coluna: 2,  direcao: "V", pista: PISTA_PENDENTE },
+    { numero: 2,  palavra: "MICROCONTROLADOR", linha: 0,  coluna: 11, direcao: "V", pista: PISTA_PENDENTE },
+    { numero: 3,  palavra: "DMA",              linha: 2,  coluna: 1,  direcao: "H", pista: PISTA_PENDENTE },
+    { numero: 4,  palavra: "CPU",              linha: 2,  coluna: 11, direcao: "H", pista: PISTA_PENDENTE },
+    { numero: 5,  palavra: "CACHE",            linha: 3,  coluna: 9,  direcao: "V", pista: "Memória rápida entre o processador e a memória principal, com os dados mais usados." },
+    { numero: 6,  palavra: "REGISTRADORES",    linha: 4,  coluna: 2,  direcao: "H", pista: PISTA_PENDENTE },
+    { numero: 7,  palavra: "EEPROM",           linha: 4,  coluna: 13, direcao: "V", pista: PISTA_PENDENTE },
+    { numero: 8,  palavra: "ADDRESSBUS",       linha: 5,  coluna: 0,  direcao: "V", pista: PISTA_PENDENTE },
+    { numero: 9,  palavra: "DATABUS",          linha: 6,  coluna: 4,  direcao: "V", pista: PISTA_PENDENTE },
+    { numero: 10, palavra: "UC",               linha: 6,  coluna: 6,  direcao: "V", pista: PISTA_PENDENTE },
+    { numero: 11, palavra: "DUALCORE",         linha: 7,  coluna: 2,  direcao: "H", pista: PISTA_PENDENTE },
+    { numero: 12, palavra: "RAM",              linha: 7,  coluna: 8,  direcao: "V", pista: PISTA_PENDENTE },
+    { numero: 13, palavra: "ROM",              linha: 9,  coluna: 11, direcao: "H", pista: PISTA_PENDENTE },
+    { numero: 14, palavra: "FLASH",            linha: 12, coluna: 9,  direcao: "H", pista: PISTA_PENDENTE },
+    { numero: 15, palavra: "ULA",              linha: 13, coluna: 0,  direcao: "H", pista: PISTA_PENDENTE },
+    { numero: 16, palavra: "QUADCORE",         linha: 15, coluna: 5,  direcao: "H", pista: PISTA_PENDENTE }
 ];
 
 
@@ -95,4 +98,37 @@ for (let i = 0; i < palavras.length; i++) {
     numero.classList.add("numero");
     numero.textContent = p.numero;
     casa.appendChild(numero);
+}
+
+
+// ===== PARTE D: mostrar as pistas =====
+
+const listaHorizontais = document.getElementById("pistas-horizontais");
+const listaVerticais = document.getElementById("pistas-verticais");
+
+// Monta o texto de uma pista, por exemplo: "5. Memória rápida..."
+function textoDaPista(p) {
+    return p.numero + ". " + p.pista;
+}
+
+for (let i = 0; i < palavras.length; i++) {
+    const p = palavras[i];
+
+    const item = document.createElement("li");
+    item.textContent = textoDaPista(p);
+
+    // Clicar na pista leva o cursor para a primeira casa da palavra
+    item.addEventListener("click", function () {
+        campos[p.linha][p.coluna].focus();
+    });
+
+    // Cada pista vai para a lista da sua direção
+    if (p.direcao === "H") {
+        listaHorizontais.appendChild(item);
+    } else {
+        listaVerticais.appendChild(item);
+    }
+
+    // Guarda o item dentro da própria palavra, para marcar certo/errado depois
+    p.item = item;
 }

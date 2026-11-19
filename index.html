@@ -12,8 +12,22 @@
 <body>
     <h1>Cruzadinha de Arquitetura Computacional</h1>
 
-    <!-- Fica vazia por enquanto: o script.js vai criar as casas aqui dentro -->
-    <div id="tabuleiro"></div>
+    <main id="jogo">
+        <!-- Fica vazia: o script.js cria as casas aqui dentro -->
+        <div id="tabuleiro"></div>
+
+        <!-- As listas também ficam vazias: o script.js coloca as pistas -->
+        <section id="pistas">
+            <div>
+                <h2>Horizontais</h2>
+                <ul id="pistas-horizontais"></ul>
+            </div>
+            <div>
+                <h2>Verticais</h2>
+                <ul id="pistas-verticais"></ul>
+            </div>
+        </section>
+    </main>
 
     <!-- O script vem por último para que a div acima já exista quando ele rodar -->
     <script src="script.js"></script>

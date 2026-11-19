@@ -80,3 +80,26 @@ h1 {
     font-weight: bold;
     pointer-events: none; /* o clique "atravessa" o número e chega no campo */
 }
+
+/* ===== Pistas ===== */
+#pistas {
+    text-align: left;
+    max-width: 560px;
+    margin: 24px auto 0;
+}
+
+#pistas h2 {
+    font-size: 1.15rem;
+    margin: 16px 0 8px;
+}
+
+#pistas ul {
+    list-style: none;  /* tira a bolinha: o número já vem no texto */
+    padding: 0;
+    margin: 0;
+}
+
+#pistas li {
+    padding: 4px 0;
+    cursor: pointer;   /* mostra a "mãozinha": dá para clicar na pista */
+}
