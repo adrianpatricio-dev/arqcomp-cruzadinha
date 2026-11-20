@@ -25,8 +25,9 @@
     --fonte-mono: Consolas, "Courier New", monospace;
 
     /* Tamanho de cada casa: no máximo 36px, mas encolhe no celular
-       para as 15 colunas caberem na largura da tela */
-    --tamanho: min(36px, calc((100vw - 80px) / 15));
+       para as 15 colunas caberem na largura da tela.
+       104px = margens da página (32) + espaços entre casas (42) + bordas do tabuleiro (30) */
+    --tamanho: min(36px, calc((100vw - 104px) / 15));
 }
 
 /* ===== Página ===== */
