@@ -54,9 +54,9 @@ body {
     background-size: 32px 32px;
 }
 
-/* Conteúdo centralizado, com no máximo 1120px de largura */
+/* Conteúdo centralizado, com no máximo 1200px de largura */
 .conteudo {
-    max-width: 1120px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 24px 16px 48px;
 }
@@ -76,7 +76,7 @@ body {
 }
 
 .topo-conteudo {
-    max-width: 1120px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 14px 16px;
     display: flex;
@@ -198,11 +198,6 @@ h1 {
 }
 
 /* ===== Barra do jogo: placar e botões ===== */
-#secao-cruzadinha {
-    max-width: 1040px;
-    margin: 0 auto;
-}
-
 #controles {
     display: flex;
     flex-wrap: wrap;
@@ -244,15 +239,20 @@ h1 {
     transition: width 0.6s ease;
 }
 
-/* ===== Tabuleiro e pistas lado a lado ===== */
-/* grid com 2 colunas: a do tabuleiro (do tamanho dele) e a das pistas */
+/* ===== Três colunas: Horizontais | tabuleiro | Verticais ===== */
+/* grid-template-areas dá um nome para cada lugar da grade.
+   As colunas dos lados dividem o espaço que sobra (1fr), com no mínimo 220px;
+   a do meio tem exatamente o tamanho do tabuleiro (max-content) */
 .area-cruzadinha {
     display: grid;
-    grid-template-columns: max-content minmax(300px, 400px);
-    justify-content: center;
-    align-items: start;
-    gap: 24px;
+    grid-template-columns: minmax(220px, 1fr) max-content minmax(220px, 1fr);
+    grid-template-areas: "horizontais tabuleiro verticais";
+    gap: 20px;
 }
+
+.pistas-esquerda  { grid-area: horizontais; }
+.coluna-tabuleiro { grid-area: tabuleiro; }
+.pistas-direita   { grid-area: verticais; }
 
 /* ===== Pista atual (em cima do tabuleiro) ===== */
 #pista-atual {
@@ -370,38 +370,14 @@ h1 {
     color: #ffffff;
 }
 
-/* ===== Pistas ===== */
-#pistas {
-    padding: 8px 18px 14px;
+/* ===== Pistas (colunas da esquerda e da direita) ===== */
+.coluna-pistas {
+    padding: 14px 16px;
 }
 
-/* "Como jogar": caixa que abre e fecha */
-.como-jogar {
-    margin: 8px 0 4px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: var(--cor-azul-claro);
-    font-size: 0.9rem;
-}
-
-.como-jogar summary {
-    font-weight: 700;
-    color: var(--cor-azul-escuro);
-    cursor: pointer;
-}
-
-.como-jogar ul {
-    margin: 8px 0 2px;
-    padding-left: 18px;
-}
-
-.bloco-pistas {
-    margin-top: 14px;
-}
-
-#pistas h2 {
-    margin: 0 0 6px;
-    padding-bottom: 6px;
+.coluna-pistas h2 {
+    margin: 0 0 8px;
+    padding-bottom: 8px;
     border-bottom: 2px solid var(--cor-preto);
     font-size: 0.85rem;
     letter-spacing: 2px;
@@ -409,26 +385,20 @@ h1 {
     color: var(--cor-texto);
 }
 
-#pistas ul {
+.coluna-pistas ul {
     list-style: none;  /* tira a bolinha: o número já vem no texto */
     padding: 0;
     margin: 0;
 }
 
-/* (a lista do "Como jogar" fica com bolinha) */
-#pistas .como-jogar ul {
-    list-style: disc;
-    padding-left: 18px;
-}
-
-#pistas .bloco-pistas li {
-    padding: 6px 8px;
+.coluna-pistas li {
+    padding: 7px 8px;
     border-radius: 6px;
-    font-size: 0.93rem;
+    font-size: 0.92rem;
     cursor: pointer;   /* mostra a "mãozinha": dá para clicar na pista */
 }
 
-#pistas .bloco-pistas li:hover {
+.coluna-pistas li:hover {
     background: var(--cor-fundo);
 }
 
@@ -448,42 +418,65 @@ h1 {
 }
 
 /* Pista da palavra selecionada agora */
-#pistas .bloco-pistas li.ativa {
+.coluna-pistas li.ativa {
     background: var(--cor-azul-claro);
     box-shadow: inset 3px 0 0 var(--cor-azul);  /* risquinho azul na esquerda */
 }
 
 /* Pistas depois de Conferir */
-#pistas li.certa {
+.coluna-pistas li.certa {
     color: var(--cor-certa);
 }
 
-#pistas li.errada {
+.coluna-pistas li.errada {
     color: var(--cor-errada);
 }
 
-/* Tela larga: as pistas acompanham a rolagem e têm rolagem própria */
-@media (min-width: 901px) {
-    #pistas {
-        position: sticky;
-        top: 16px;
-        max-height: calc(100vh - 32px);
-        overflow-y: auto;
-        box-sizing: border-box;
+/* "Como jogar": caixa que abre e fecha, embaixo do tabuleiro */
+.como-jogar {
+    box-sizing: border-box;
+    max-width: calc(var(--tamanho) * 15 + 70px);  /* mesma largura do tabuleiro */
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--cor-azul-claro);
+    font-size: 0.9rem;
+}
+
+.como-jogar summary {
+    font-weight: 700;
+    color: var(--cor-azul-escuro);
+    cursor: pointer;
+}
+
+.como-jogar ul {
+    margin: 8px 0 2px;
+    padding-left: 18px;
+}
+
+/* Tela média (notebook pequeno, tablet): tabuleiro em cima,
+   Horizontais e Verticais lado a lado embaixo dele */
+@media (max-width: 1119px) {
+    .area-cruzadinha {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "tabuleiro   tabuleiro"
+            "horizontais verticais";
+    }
+
+    .coluna-tabuleiro {
+        justify-self: center;   /* centraliza o tabuleiro na linha de cima */
     }
 }
 
-/* Tela estreita (tablet e celular): uma coluna só, pistas embaixo do tabuleiro */
-@media (max-width: 900px) {
+/* Celular: tudo numa coluna só */
+@media (max-width: 640px) {
     .area-cruzadinha {
         grid-template-columns: 1fr;
-        justify-items: center;
-    }
-
-    #pistas {
-        width: 100%;
-        max-width: 640px;
-        box-sizing: border-box;
+        grid-template-areas:
+            "tabuleiro"
+            "horizontais"
+            "verticais";
     }
 }
 
