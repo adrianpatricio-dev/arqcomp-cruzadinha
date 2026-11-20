@@ -784,3 +784,437 @@ h1 {
     text-align: center;
     color: var(--cor-texto-suave);
 }
+
+/* ===== Processador ===== */
+.bloco-processador {
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.bloco-processador h3 {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+}
+
+.instrucao {
+    margin: 0 0 16px;
+    color: var(--cor-texto-suave);
+}
+
+/* --- Cores de cada parte (usadas nas caixas, nas peças e nas vagas preenchidas) --- */
+.cor-ula {
+    background: var(--cor-azul-claro);
+    border-color: var(--cor-azul);
+    color: var(--cor-azul-escuro);
+}
+
+.cor-uc {
+    background: var(--cor-preto);
+    border-color: var(--cor-preto);
+    color: #ffffff;
+}
+
+.cor-registradores {
+    background: #eef6ff;
+    border-color: #60a5fa;
+    color: var(--cor-azul-escuro);
+}
+
+.cor-es,
+.cor-memoria {
+    background: var(--cor-cartao);
+    border-color: var(--cor-preto);
+    color: var(--cor-texto);
+}
+
+/* --- Diagrama: 5 colunas = caixa, seta, CPU, seta, caixa (igual à imagem) --- */
+.diagrama {
+    display: grid;
+    grid-template-columns: 1fr 56px 2.2fr 56px 1fr;
+    align-items: center;
+    padding: 24px;
+    border-radius: 12px;
+    background: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+}
+
+/* Caixa grande da CPU, com ULA e UC lado a lado e Registradores embaixo */
+.cpu {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 40px 16px 16px;
+    border: 2px solid var(--cor-preto);
+    border-radius: 14px;
+    background: var(--cor-cartao);
+}
+
+.nome-cpu {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* Registradores ocupam as duas colunas da CPU */
+.bloco-largo {
+    grid-column: 1 / 3;
+}
+
+/* Caixas de fora (Entrada e saída, Memória) um pouco mais altas */
+.bloco-fora {
+    min-height: 96px;
+}
+
+/* --- Caixas do diagrama "Veja como funciona" --- */
+.bloco {
+    min-height: 76px;
+    padding: 10px;
+    border-width: 2px;          /* a cor da borda vem da classe cor-... */
+    border-style: solid;        /* (por isso não usamos o atalho "border", que apagaria a cor) */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
+}
+
+.nome-bloco {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.legenda {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Visorzinho onde aparecem os valores (2 + 3, R1 = 2...). Vazio = escondido */
+.visor {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--cor-azul);
+    color: #ffffff;
+    font-family: var(--fonte-mono);
+    font-size: 0.8rem;
+    animation: aparecer 0.3s ease both;
+}
+
+.visor:empty {
+    display: none;
+}
+
+/* Parte acesa no passo atual: cresce um pouco e ganha um "halo" azul */
+.bloco.ativo {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 5px rgba(29, 78, 216, 0.25);
+}
+
+/* Quando alguma parte está acesa, as outras ficam apagadinhas */
+.tem-destaque .bloco:not(.ativo) {
+    opacity: 0.4;
+}
+
+/* --- Setas de ida e volta (os barramentos), feitas com CSS --- */
+/* A linha é o próprio elemento; as pontas são triângulos no ::before e ::after */
+.seta {
+    position: relative;
+    height: 3px;
+    margin: 0 10px;
+    background: var(--cor-preto);
+    color: var(--cor-preto);    /* cor usada pelas pontas */
+}
+
+.seta::before,
+.seta::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    border-top: 7.5px solid transparent;
+    border-bottom: 7.5px solid transparent;
+}
+
+.seta::before {                 /* ponta da esquerda */
+    left: -4px;
+    border-right: 10px solid currentColor;
+}
+
+.seta::after {                  /* ponta da direita */
+    right: -4px;
+    border-left: 10px solid currentColor;
+}
+
+/* Seta acesa: fica azul e uma bolinha corre de um lado para o outro (dado passando) */
+.seta.ativo {
+    background: var(--cor-azul);
+    color: var(--cor-azul);
+}
+
+.pulso {
+    display: none;
+}
+
+.seta.ativo .pulso {
+    display: block;
+    position: absolute;
+    top: -4px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--cor-azul);
+    box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.25);
+    animation: viajar 1.2s ease-in-out infinite alternate;
+}
+
+/* --- Texto e botões dos passos --- */
+.explicacao-passo {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-left: 4px solid var(--cor-azul);
+    border-radius: 8px;
+    background: var(--cor-azul-claro);
+    min-height: 96px;
+}
+
+.contador-passo {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--cor-azul);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.explicacao-passo h4 {
+    margin: 2px 0 4px;
+    font-size: 1.1rem;
+}
+
+.explicacao-passo p:last-child {
+    margin: 0;
+}
+
+.controles-passo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+/* --- Jogo de montar --- */
+/* Bandeja onde ficam as peças soltas */
+.bandeja {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 14px;
+    margin-bottom: 16px;
+    border: 2px dashed var(--cor-borda);
+    border-radius: 12px;
+}
+
+/* Peça: parece um botão que dá para pegar */
+.peca {
+    padding: 10px 18px;
+    border-width: 2px;          /* a cor vem da classe cor-... */
+    border-style: solid;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: grab;
+    user-select: none;          /* não seleciona o texto ao arrastar */
+    box-shadow: var(--sombra);
+    transition: transform 0.15s;
+}
+
+.peca:hover {
+    transform: translateY(-2px);
+}
+
+/* Peça sendo arrastada fica meio transparente */
+.peca.arrastando {
+    opacity: 0.4;
+}
+
+/* Peça escolhida com clique/toque: contorno azul em volta */
+.peca.selecionada {
+    outline: 3px solid var(--cor-azul);
+    outline-offset: 3px;
+}
+
+/* Vaga: o espaço onde a peça se encaixa */
+.vaga {
+    min-height: 76px;
+    padding: 10px;
+    border-width: 2px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Vaga ainda vazia: borda tracejada cinza com a dica no meio.
+   ":not(.preenchida)" = só enquanto não tiver peça; depois valem as cores da peça */
+.vaga:not(.preenchida) {
+    border-style: dashed;
+    border-color: #9aa8bf;
+    background: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+}
+
+.dica-vaga {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--cor-texto-suave);
+}
+
+/* Peça passando por cima da vaga */
+.vaga.por-cima {
+    border-color: var(--cor-azul);
+    background: var(--cor-azul-claro);
+}
+
+/* Vaga preenchida: borda cheia (as cores vêm da classe cor-...) */
+.vaga.preenchida {
+    border-style: solid;
+    cursor: default;
+    animation: encaixar 0.4s ease;
+}
+
+.vaga.preenchida strong {
+    font-size: 1.05rem;
+}
+
+/* Na vaga preenchida a dica pega a cor do texto da peça */
+.vaga.preenchida .dica-vaga {
+    color: inherit;
+    opacity: 0.8;
+}
+
+/* Errou: a vaga treme (a animação "tremer" é a mesma da cruzadinha) */
+.vaga.errou {
+    border-color: var(--cor-errada);
+    animation: tremer 0.4s ease;
+}
+
+.placar-montar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+#contador-pecas {
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Caixa com a explicação da peça */
+.explicacao-peca {
+    margin: 14px 0 0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--cor-borda);
+    border-radius: 8px;
+    background: var(--cor-fundo);
+}
+
+.explicacao-peca.certo {
+    border-left-color: var(--cor-azul);
+    background: var(--cor-azul-claro);
+    color: var(--cor-azul-escuro);
+}
+
+.explicacao-peca.erro {
+    border-left-color: var(--cor-errada);
+    background: var(--cor-errada-fundo);
+    color: var(--cor-errada);
+}
+
+/* --- Celular: o diagrama vira uma coluna e as setas ficam em pé --- */
+@media (max-width: 720px) {
+    .diagrama {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+
+    .bloco-fora {
+        min-height: 64px;
+    }
+
+    .seta {
+        width: 3px;
+        height: 44px;
+        margin: 10px auto;
+    }
+
+    /* As pontas passam a apontar para cima e para baixo */
+    .seta::before,
+    .seta::after {
+        left: -6px;
+        border: 7.5px solid transparent;  /* zera as bordas do modo deitado */
+    }
+
+    .seta::before {                 /* ponta de cima */
+        top: -4px;
+        border-top: 0;
+        border-bottom: 10px solid currentColor;
+    }
+
+    .seta::after {                  /* ponta de baixo */
+        top: auto;
+        right: auto;
+        bottom: -4px;
+        border-bottom: 0;
+        border-top: 10px solid currentColor;
+    }
+
+    .seta.ativo .pulso {
+        top: 0;
+        left: -4px;
+        animation-name: viajar-vertical;
+    }
+}
+
+/* Bolinha andando pela seta: da esquerda para a direita... */
+@keyframes viajar {
+    from { left: 0; }
+    to   { left: calc(100% - 11px); }
+}
+
+/* ...ou de cima para baixo, no celular */
+@keyframes viajar-vertical {
+    from { top: 0; }
+    to   { top: calc(100% - 11px); }
+}
+
+/* Vaga recebendo a peça certa: dá um "pulinho" */
+@keyframes encaixar {
+    0%   { transform: scale(0.9); }
+    60%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Quem pediu ao sistema para "reduzir movimento" fica sem animações */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
