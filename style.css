@@ -1,24 +1,31 @@
 /* =========================================================
    CIRCUITO CRUZADO - estilos
-   Tema: placa de circuito (fundo verde-escuro, trilhas de
-   cobre e LEDs). As cores ficam todas nas variáveis abaixo.
+   Tema claro: azul, branco e preto, com um fundo
+   quadriculado bem leve que lembra papel de circuito.
+   As cores ficam todas nas variáveis abaixo.
    ========================================================= */
 
 /* ===== Variáveis: as cores e o tamanho ficam num lugar só ===== */
 /* Para mudar uma cor no site inteiro, basta trocar aqui */
 :root {
-    --cor-fundo: #071a12;        /* verde bem escuro, cor de placa de circuito */
-    --cor-trilha: #12382a;       /* linhas do desenho de circuito no fundo */
-    --cor-painel: #0c241a;       /* fundo das caixas (pistas, placar) */
-    --cor-texto: #d9f5e6;        /* texto principal (verde bem clarinho) */
-    --cor-texto-suave: #8bb8a2;  /* texto secundário */
-    --cor-cobre: #e0a64a;        /* dourado/cobre das trilhas e bordas */
-    --cor-casa: #0f2b20;         /* casa onde se digita */
-    --cor-destaque: #4dd8e8;     /* ciano: casa e palavra selecionadas */
-    --cor-certa: #3ddc84;        /* verde LED: palavra certa */
-    --cor-certa-fundo: #12492f;
-    --cor-errada: #ff5c7a;       /* vermelho LED: palavra errada */
-    --cor-errada-fundo: #4a1622;
+    --cor-fundo: #f3f6fb;        /* fundo da página (branco azulado) */
+    --cor-linha: #e2e9f4;        /* linhas do quadriculado do fundo */
+    --cor-cartao: #ffffff;       /* fundo das caixas */
+    --cor-borda: #d5deeb;        /* bordas finas das caixas */
+    --cor-texto: #0f172a;        /* texto principal (quase preto) */
+    --cor-texto-suave: #55627a;  /* texto secundário (cinza) */
+    --cor-azul: #1d4ed8;         /* azul principal: botões, destaques */
+    --cor-azul-escuro: #1e3a8a;  /* azul mais escuro: textos de destaque */
+    --cor-azul-claro: #e3ecff;   /* azul bem clarinho: fundos de destaque */
+    --cor-preto: #0f172a;        /* preto das bordas das casas e do chip */
+
+    /* Únicas cores fora do azul: só para dizer "certo" e "errado" */
+    --cor-certa: #15803d;
+    --cor-certa-fundo: #e5f6eb;
+    --cor-errada: #c81e1e;
+    --cor-errada-fundo: #fdeaea;
+
+    --sombra: 0 2px 10px rgba(15, 23, 42, 0.07);  /* sombra leve das caixas */
 
     /* Fontes do próprio computador (sem baixar nada) */
     --fonte-texto: "Segoe UI", Arial, sans-serif;
@@ -33,73 +40,91 @@
 /* ===== Página ===== */
 body {
     margin: 0;
-    padding: 24px 16px 48px;
     min-height: 100vh;
-    box-sizing: border-box;
     color: var(--cor-texto);
     font-family: var(--fonte-texto);
-    text-align: center;
+    line-height: 1.45;
 
-    /* Fundo de placa de circuito, feito só com gradientes:
-       1ª camada: pontinhos (os "furos" da placa)
-       2ª e 3ª camadas: linhas finas na horizontal e na vertical */
+    /* Fundo quadriculado, feito com dois gradientes de linhas finas
+       (uma camada para as linhas horizontais e outra para as verticais) */
     background-color: var(--cor-fundo);
     background-image:
-        radial-gradient(circle, var(--cor-trilha) 2px, transparent 2.5px),
-        linear-gradient(var(--cor-trilha) 1px, transparent 1px),
-        linear-gradient(90deg, var(--cor-trilha) 1px, transparent 1px);
-    background-size: 48px 48px;
-    background-position: 0 0, 24px 24px, 24px 24px;
+        linear-gradient(var(--cor-linha) 1px, transparent 1px),
+        linear-gradient(90deg, var(--cor-linha) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+/* Conteúdo centralizado, com no máximo 1120px de largura */
+.conteudo {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+}
+
+/* Caixa branca padrão, usada em vários lugares */
+.cartao {
+    background: var(--cor-cartao);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    box-shadow: var(--sombra);
 }
 
 /* ===== Topo ===== */
 .topo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 28px;
+    background: var(--cor-cartao);
+    border-bottom: 1px solid var(--cor-borda);
 }
 
-.titulos {
-    text-align: left;
+.topo-conteudo {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 14px 16px;
+    display: flex;
+    flex-wrap: wrap;               /* no celular o menu desce para baixo do nome */
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 h1 {
     margin: 0;
-    font-family: var(--fonte-mono);
-    font-size: 2rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--cor-cobre);
-    text-shadow: 0 0 12px rgba(224, 166, 74, 0.45); /* brilho dourado */
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+    color: var(--cor-texto);
 }
 
 .subtitulo {
-    margin: 4px 0 0;
+    margin: 0;
     color: var(--cor-texto-suave);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 /* --- Logo: um chip desenhado com CSS --- */
 /* O quadrado preto é o chip; os "pés" (pinos) são feitos no ::before e ::after */
 .chip-logo {
     position: relative;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
+    margin: 8px;
     flex-shrink: 0;            /* não deixa o chip ser espremido */
-    background: #101820;
-    border: 2px solid var(--cor-cobre);
+    background: var(--cor-preto);
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--fonte-mono);
     font-weight: bold;
-    color: var(--cor-certa);
+    font-size: 0.85rem;
+    color: #ffffff;
 }
 
-/* Pinos da esquerda e da direita: listras de cobre */
+/* Pinos: listras azuis que saem do chip */
 .chip-logo::before,
 .chip-logo::after {
     content: "";
@@ -107,134 +132,126 @@ h1 {
     z-index: -1;               /* fica atrás do chip */
 }
 
+/* Pinos da esquerda e da direita */
 .chip-logo::before {
-    top: 8px;
-    bottom: 8px;
-    left: -9px;
-    right: -9px;
+    top: 7px;
+    bottom: 7px;
+    left: -7px;
+    right: -7px;
     background:
-        repeating-linear-gradient(to bottom, var(--cor-cobre) 0 3px, transparent 3px 8px) left / 8px 100% no-repeat,
-        repeating-linear-gradient(to bottom, var(--cor-cobre) 0 3px, transparent 3px 8px) right / 8px 100% no-repeat;
+        repeating-linear-gradient(to bottom, var(--cor-azul) 0 3px, transparent 3px 7px) left / 7px 100% no-repeat,
+        repeating-linear-gradient(to bottom, var(--cor-azul) 0 3px, transparent 3px 7px) right / 7px 100% no-repeat;
 }
 
 /* Pinos de cima e de baixo */
 .chip-logo::after {
-    left: 8px;
-    right: 8px;
-    top: -9px;
-    bottom: -9px;
+    left: 7px;
+    right: 7px;
+    top: -7px;
+    bottom: -7px;
     background:
-        repeating-linear-gradient(to right, var(--cor-cobre) 0 3px, transparent 3px 8px) top / 100% 8px no-repeat,
-        repeating-linear-gradient(to right, var(--cor-cobre) 0 3px, transparent 3px 8px) bottom / 100% 8px no-repeat;
+        repeating-linear-gradient(to right, var(--cor-azul) 0 3px, transparent 3px 7px) top / 100% 7px no-repeat,
+        repeating-linear-gradient(to right, var(--cor-azul) 0 3px, transparent 3px 7px) bottom / 100% 7px no-repeat;
 }
 
-/* --- LEDs decorativos --- */
-.leds {
-    display: flex;
-    gap: 8px;
+/* ===== Botões ===== */
+.botao {
+    font-family: var(--fonte-texto);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--cor-azul);
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s, box-shadow 0.2s;
 }
 
-.led {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--cor-certa);
-    box-shadow: 0 0 8px var(--cor-certa);
+.botao:active {
+    transform: scale(0.96);    /* parece que afundou ao clicar */
 }
 
-/* Cada LED com uma cor */
-.led:nth-child(2) {
-    background: var(--cor-cobre);
-    box-shadow: 0 0 8px var(--cor-cobre);
+/* Botão principal: azul cheio */
+.botao-principal {
+    background: var(--cor-azul);
+    color: #ffffff;
 }
 
-.led:nth-child(3) {
-    background: var(--cor-destaque);
-    box-shadow: 0 0 8px var(--cor-destaque);
+.botao-principal:hover {
+    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35);
 }
 
-/* ===== Tabuleiro e pistas lado a lado ===== */
-/* flex-wrap: se a tela for estreita (celular), as pistas descem para baixo do tabuleiro */
-#jogo {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 32px;
+/* Botão secundário: só o contorno preto, para não ser clicado por engano */
+.botao-secundario {
+    background: transparent;
+    border-color: var(--cor-preto);
+    color: var(--cor-preto);
 }
 
-/* ===== Botões e contador ===== */
+.botao-secundario:hover {
+    background: var(--cor-fundo);
+}
+
+/* Botão desativado (usado no processador) */
+.botao:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* ===== Barra do jogo: placar e botões ===== */
+#secao-cruzadinha {
+    max-width: 1040px;
+    margin: 0 auto;
+}
+
 #controles {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
 }
 
-#controles button {
-    font-family: var(--fonte-mono);
-    font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 10px 20px;
-    border: 2px solid var(--cor-certa);
-    border-radius: 6px;
-    background-color: var(--cor-certa);
-    color: #04140c;
-    cursor: pointer;
-    transition: transform 0.1s, box-shadow 0.2s;
-}
-
-#controles button:hover {
-    box-shadow: 0 0 14px var(--cor-certa);  /* "acende" ao passar o mouse */
-}
-
-#controles button:active {
-    transform: scale(0.95);                 /* parece que afundou ao clicar */
-}
-
-/* Reiniciar só com contorno, para não ser clicado por engano.
-   Dois ids (#controles #botao-reiniciar) "ganham" da regra de cima, que tem só um */
-#controles #botao-reiniciar {
-    background-color: transparent;
-    border-color: var(--cor-texto-suave);
-    color: var(--cor-texto-suave);
-}
-
-#controles #botao-reiniciar:hover {
-    box-shadow: 0 0 10px rgba(139, 184, 162, 0.5);
-}
-
-/* Placar: contador em cima e barra de progresso embaixo */
 .placar {
     flex: 1;
-    min-width: 150px;
-    text-align: left;
+    min-width: 180px;
+    max-width: 420px;
 }
 
 #contador {
     margin: 0 0 6px;
-    font-family: var(--fonte-mono);
-    font-size: 1rem;
-    font-weight: bold;
+    font-weight: 700;
 }
 
-/* Barra de progresso: o fundo é a "trilha" e a parte preenchida cresce */
+.botoes {
+    display: flex;
+    gap: 10px;
+}
+
+/* Barra de progresso: o fundo cinza é a "trilha" e a parte azul cresce */
 .barra {
     height: 8px;
     border-radius: 4px;
-    background: var(--cor-casa);
-    border: 1px solid var(--cor-trilha);
+    background: var(--cor-azul-claro);
     overflow: hidden;
 }
 
 #barra-preenchida {
     height: 100%;
     width: 0%;              /* o script.js troca essa largura */
-    background: linear-gradient(90deg, var(--cor-cobre), var(--cor-certa));
+    background: var(--cor-azul);
     transition: width 0.6s ease;
+}
+
+/* ===== Tabuleiro e pistas lado a lado ===== */
+/* grid com 2 colunas: a do tabuleiro (do tamanho dele) e a das pistas */
+.area-cruzadinha {
+    display: grid;
+    grid-template-columns: max-content minmax(300px, 400px);
+    justify-content: center;
+    align-items: start;
+    gap: 24px;
 }
 
 /* ===== Pista atual (em cima do tabuleiro) ===== */
@@ -242,22 +259,24 @@ h1 {
     box-sizing: border-box;
     width: 100%;
     max-width: calc(var(--tamanho) * 15 + 70px);  /* mesma largura do tabuleiro */
-    min-height: 3em;
+    min-height: 3.2em;
     margin: 0 0 12px;
     padding: 10px 14px;
-    border: 1px solid var(--cor-destaque);
-    border-radius: 8px;
-    background: rgba(77, 216, 232, 0.08);
-    text-align: left;
+    border-radius: 10px;
+    background: var(--cor-preto);
+    color: #ffffff;
     font-size: 0.95rem;
-    line-height: 1.4;
 }
 
 /* "3 · HORIZONTAL" em destaque antes do texto da pista */
 #pista-atual strong {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 0 8px;
+    border-radius: 4px;
+    background: var(--cor-azul);
     font-family: var(--fonte-mono);
-    color: var(--cor-destaque);
-    margin-right: 6px;
+    font-size: 0.85rem;
 }
 
 /* ===== Tabuleiro ===== */
@@ -268,9 +287,10 @@ h1 {
     gap: 3px;
     width: max-content;  /* o tabuleiro só ocupa a largura das casas */
     padding: 12px;
-    border: 2px solid var(--cor-trilha);
-    border-radius: 10px;
-    background: rgba(7, 26, 18, 0.85);
+    background: var(--cor-cartao);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    box-shadow: var(--sombra);
 }
 
 /* Cada casa é um quadrado; "relative" deixa o número ficar no cantinho */
@@ -285,14 +305,14 @@ h1 {
     background: transparent;
 }
 
-/* O campo de digitar ocupa a casa inteira e parece um "pad" de cobre */
+/* O campo de digitar ocupa a casa inteira */
 .casa input {
     width: 100%;
     height: 100%;
     box-sizing: border-box;   /* a borda conta dentro do tamanho */
-    border: 2px solid var(--cor-cobre);
+    border: 2px solid var(--cor-preto);
     border-radius: 4px;
-    background-color: var(--cor-casa);
+    background-color: var(--cor-cartao);
     color: var(--cor-texto);
     font-family: var(--fonte-mono);
     font-size: calc(var(--tamanho) * 0.5);
@@ -304,11 +324,11 @@ h1 {
     transition: background-color 0.2s, border-color 0.2s;
 }
 
-/* Casas da palavra que o jogador está preenchendo agora: contorno ciano.
+/* Casas da palavra que o jogador está preenchendo agora: azul clarinho.
    Vem antes de certa/errada para que essas cores "ganhem" dela */
 .casa input.atual {
-    background-color: #123a3a;
-    border-color: var(--cor-destaque);
+    background-color: var(--cor-azul-claro);
+    border-color: var(--cor-azul);
 }
 
 /* Depois de Conferir: verde para casas de palavras certas, vermelho para erradas */
@@ -324,51 +344,69 @@ h1 {
     color: var(--cor-errada);
 }
 
-/* Casa selecionada: fundo ciano para o jogador saber onde está.
-   Fica depois das regras de certa/errada para o ciano "ganhar" delas */
+/* Casa selecionada: azul cheio com letra branca.
+   Fica depois das regras de certa/errada para o azul "ganhar" delas */
 .casa input:focus {
     outline: none;
-    background-color: var(--cor-destaque);
-    border-color: var(--cor-destaque);
-    color: #04140c;
-    box-shadow: 0 0 10px var(--cor-destaque);
+    background-color: var(--cor-azul);
+    border-color: var(--cor-azul);
+    color: #ffffff;
 }
 
 /* Número da pista, pequeno, no canto superior esquerdo da casa */
 .numero {
     position: absolute;
-    top: 2px;
+    top: 1px;
     left: 4px;
     font-family: var(--fonte-mono);
     font-size: calc(var(--tamanho) * 0.28);
     font-weight: bold;
-    color: var(--cor-cobre);
+    color: var(--cor-azul);
     pointer-events: none; /* o clique "atravessa" o número e chega no campo */
+}
+
+/* Na casa selecionada (azul), o número fica branco para aparecer */
+.casa input:focus + .numero {
+    color: #ffffff;
 }
 
 /* ===== Pistas ===== */
 #pistas {
-    text-align: left;
-    max-width: 380px;
-    width: 100%;
+    padding: 8px 18px 14px;
+}
+
+/* "Como jogar": caixa que abre e fecha */
+.como-jogar {
+    margin: 8px 0 4px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--cor-azul-claro);
+    font-size: 0.9rem;
+}
+
+.como-jogar summary {
+    font-weight: 700;
+    color: var(--cor-azul-escuro);
+    cursor: pointer;
+}
+
+.como-jogar ul {
+    margin: 8px 0 2px;
+    padding-left: 18px;
 }
 
 .bloco-pistas {
-    background: var(--cor-painel);
-    border: 1px solid var(--cor-trilha);
-    border-left: 4px solid var(--cor-cobre);   /* faixa de cobre na lateral */
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 16px;
+    margin-top: 14px;
 }
 
 #pistas h2 {
-    margin: 0 0 8px;
-    font-family: var(--fonte-mono);
-    font-size: 1rem;
+    margin: 0 0 6px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--cor-preto);
+    font-size: 0.85rem;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--cor-cobre);
+    color: var(--cor-texto);
 }
 
 #pistas ul {
@@ -377,15 +415,21 @@ h1 {
     margin: 0;
 }
 
-#pistas li {
+/* (a lista do "Como jogar" fica com bolinha) */
+#pistas .como-jogar ul {
+    list-style: disc;
+    padding-left: 18px;
+}
+
+#pistas .bloco-pistas li {
     padding: 6px 8px;
-    border-radius: 4px;
-    line-height: 1.35;
+    border-radius: 6px;
+    font-size: 0.93rem;
     cursor: pointer;   /* mostra a "mãozinha": dá para clicar na pista */
 }
 
-#pistas li:hover {
-    background: rgba(77, 216, 232, 0.08);
+#pistas .bloco-pistas li:hover {
+    background: var(--cor-fundo);
 }
 
 /* Etiqueta "rascunho": lembrete de que a pista ainda vai ser reescrita.
@@ -394,19 +438,19 @@ h1 {
     display: inline-block;
     margin-left: 6px;
     padding: 0 5px;
-    border: 1px dashed var(--cor-cobre);
+    border: 1px dashed var(--cor-texto-suave);
     border-radius: 3px;
-    color: var(--cor-cobre);
+    color: var(--cor-texto-suave);
     font-family: var(--fonte-mono);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     text-transform: uppercase;
     vertical-align: middle;
 }
 
 /* Pista da palavra selecionada agora */
-#pistas li.ativa {
-    background: rgba(77, 216, 232, 0.15);
-    box-shadow: inset 3px 0 0 var(--cor-destaque);  /* risquinho ciano na esquerda */
+#pistas .bloco-pistas li.ativa {
+    background: var(--cor-azul-claro);
+    box-shadow: inset 3px 0 0 var(--cor-azul);  /* risquinho azul na esquerda */
 }
 
 /* Pistas depois de Conferir */
@@ -416,6 +460,46 @@ h1 {
 
 #pistas li.errada {
     color: var(--cor-errada);
+}
+
+/* Tela larga: as pistas acompanham a rolagem e têm rolagem própria */
+@media (min-width: 901px) {
+    #pistas {
+        position: sticky;
+        top: 16px;
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+        box-sizing: border-box;
+    }
+}
+
+/* Tela estreita (tablet e celular): uma coluna só, pistas embaixo do tabuleiro */
+@media (max-width: 900px) {
+    .area-cruzadinha {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    #pistas {
+        width: 100%;
+        max-width: 640px;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 520px) {
+    #controles {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .placar {
+        max-width: none;
+    }
+
+    .botoes .botao {
+        flex: 1;      /* no celular, os dois botões dividem a largura */
+    }
 }
 
 /* ===== Tela de vitória ===== */
@@ -428,7 +512,7 @@ h1 {
     align-items: center;
     justify-content: center;
     padding: 16px;
-    background: rgba(2, 10, 6, 0.75);
+    background: rgba(15, 23, 42, 0.55);
 }
 
 /* Sem esta regra, o display: flex de cima faria o "hidden" não esconder */
@@ -439,18 +523,16 @@ h1 {
 .cartao-vitoria {
     max-width: 360px;
     padding: 28px 24px;
-    border: 2px solid var(--cor-certa);
-    border-radius: 12px;
-    background: var(--cor-painel);
-    box-shadow: 0 0 30px rgba(61, 220, 132, 0.4);
+    border-radius: 14px;
+    background: var(--cor-cartao);
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.3);
     animation: aparecer 0.4s ease both;
 }
 
 .cartao-vitoria h2 {
-    margin: 12px 0 8px;
-    font-family: var(--fonte-mono);
-    text-transform: uppercase;
-    color: var(--cor-certa);
+    margin: 14px 0 6px;
+    color: var(--cor-azul-escuro);
 }
 
 .cartao-vitoria p {
@@ -458,7 +540,7 @@ h1 {
     color: var(--cor-texto-suave);
 }
 
-/* Círculo verde com o ✔, como um LED grande aceso */
+/* Círculo azul com o ✔ */
 .selo-vitoria {
     width: 64px;
     height: 64px;
@@ -468,22 +550,9 @@ h1 {
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    color: #04140c;
-    background: var(--cor-certa);
-    box-shadow: 0 0 24px var(--cor-certa);
-}
-
-#botao-fechar-vitoria {
-    font-family: var(--fonte-mono);
-    font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 10px 24px;
-    border: none;
-    border-radius: 6px;
-    background: var(--cor-certa);
-    color: #04140c;
-    cursor: pointer;
+    color: #ffffff;
+    background: var(--cor-azul);
+    box-shadow: 0 0 0 8px var(--cor-azul-claro);
 }
 
 /* Cada "0" ou "1" da chuva de bits (criados pelo script.js) */
@@ -493,8 +562,7 @@ h1 {
     z-index: 11;
     font-family: var(--fonte-mono);
     font-weight: bold;
-    color: var(--cor-certa);
-    text-shadow: 0 0 6px var(--cor-certa);
+    color: var(--cor-azul);
     pointer-events: none;     /* não atrapalha os cliques */
     animation: cair linear forwards;  /* a duração vem do script.js */
 }
@@ -518,15 +586,15 @@ h1 {
     to   { opacity: 1; transform: scale(1); }
 }
 
-/* Palavra certa: a casa "acende" com um brilho verde */
+/* Palavra certa: a casa dá um "pulinho" */
 .casa input.certa {
     animation: acender 0.5s ease both;
 }
 
 @keyframes acender {
-    0%   { box-shadow: 0 0 0 var(--cor-certa); transform: scale(1); }
-    50%  { box-shadow: 0 0 16px var(--cor-certa); transform: scale(1.15); }
-    100% { box-shadow: 0 0 4px var(--cor-certa); transform: scale(1); }
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
 }
 
 /* Palavra errada: a casa treme para os lados */
@@ -540,36 +608,13 @@ h1 {
     75%      { transform: translateX(4px); }
 }
 
-/* LEDs do topo piscando, cada um num ritmo diferente */
-.led {
-    animation: piscar 1.6s ease-in-out infinite;
-}
-
-.led:nth-child(2) { animation-delay: 0.4s; }
-.led:nth-child(3) { animation-delay: 0.8s; }
-
-@keyframes piscar {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.25; }
-}
-
-/* Cartão de vitória surgindo */
+/* Cartão surgindo */
 @keyframes aparecer {
-    from { opacity: 0; transform: scale(0.8); }
+    from { opacity: 0; transform: scale(0.85); }
     to   { opacity: 1; transform: scale(1); }
 }
 
 /* Bit caindo do topo até embaixo da tela, girando um pouco */
 @keyframes cair {
     to { transform: translateY(110vh) rotate(180deg); }
-}
-
-/* Quem pediu ao sistema para "reduzir movimento" fica sem animações */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation: none !important;
-        transition: none !important;
-    }
 }
