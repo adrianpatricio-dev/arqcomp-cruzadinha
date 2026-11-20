@@ -1,179 +1,11 @@
 // =========================================================
 // PROCESSADOR
-// Parte 1: animação passo a passo de como o computador faz 2 + 3
-// Parte 2: jogo de arrastar as peças para montar o processador
+// Jogo de arrastar as peças para montar o processador
+// (Entrada e saída, CPU com ULA, UC e Registradores, e Memória)
 // =========================================================
 
 
-// =================== PARTE 1: VER FUNCIONANDO ===================
-
-// ===== 1A: os passos da animação =====
-// Cada passo tem:
-//   titulo e texto  -> o que aparece embaixo do diagrama
-//   destaque        -> ids das caixas e setas que acendem nesse passo
-//   visores         -> o que escrever dentro de cada caixa (o "visorzinho" preto)
-const passos = [
-    {
-        titulo: "Visão geral",
-        texto: "A CPU fica no meio: recebe dados pela entrada, busca e guarda informações na memória e entrega o resultado na saída. Dentro dela, ULA, UC e registradores trabalham juntos. Clique em Próximo para acompanhar a conta 2 + 3.",
-        destaque: [],
-        visores: []
-    },
-    {
-        titulo: "1. Entrada",
-        texto: "O usuário digita 2 + 3 no teclado. Esse dado entra no computador por um dispositivo de entrada.",
-        destaque: ["v-es", "v-seta-es"],
-        visores: [ { id: "v-es", texto: "teclado: 2 + 3" } ]
-    },
-    {
-        titulo: "2. Busca da instrução",
-        texto: "O programa fica guardado na memória. A UC busca a próxima instrução: o barramento de endereço diz onde ler e o barramento de dados traz a instrução.",
-        destaque: ["v-memoria", "v-seta-mem", "v-uc"],
-        visores: [ { id: "v-memoria", texto: "SOMAR R1, R2" }, { id: "v-uc", texto: "buscando..." } ]
-    },
-    {
-        titulo: "3. Decodificação",
-        texto: "A UC decodifica a instrução: entende que é uma soma e manda sinais avisando cada parte do que fazer.",
-        destaque: ["v-uc"],
-        visores: [ { id: "v-uc", texto: "é uma SOMA!" } ]
-    },
-    {
-        titulo: "4. Dados nos registradores",
-        texto: "Os números 2 e 3 são colocados nos registradores, a memória mais rápida, bem ao lado da ULA.",
-        destaque: ["v-registradores"],
-        visores: [ { id: "v-registradores", texto: "R1 = 2 · R2 = 3" } ]
-    },
-    {
-        titulo: "5. Execução",
-        texto: "A ULA pega os valores dos registradores e faz a conta: 2 + 3 = 5.",
-        destaque: ["v-ula", "v-registradores"],
-        visores: [ { id: "v-registradores", texto: "R1 = 2 · R2 = 3" }, { id: "v-ula", texto: "2 + 3 = 5" } ]
-    },
-    {
-        titulo: "6. Resultado guardado",
-        texto: "O resultado vai para um registrador e depois é gravado na memória, de novo passando pelos barramentos.",
-        destaque: ["v-registradores", "v-seta-mem", "v-memoria"],
-        visores: [ { id: "v-registradores", texto: "R3 = 5" }, { id: "v-memoria", texto: "resultado = 5" } ]
-    },
-    {
-        titulo: "7. Saída",
-        texto: "Por fim, o resultado aparece na tela, um dispositivo de saída. E o ciclo recomeça com a próxima instrução!",
-        destaque: ["v-es", "v-seta-es"],
-        visores: [ { id: "v-es", texto: "tela: 5" } ]
-    }
-];
-
-
-// ===== 1B: elementos da página =====
-
-const diagramaVer = document.getElementById("diagrama-ver");
-const contadorPasso = document.getElementById("contador-passo");
-const tituloPasso = document.getElementById("titulo-passo");
-const textoPasso = document.getElementById("texto-passo");
-const botaoAnterior = document.getElementById("passo-anterior");
-const botaoProximo = document.getElementById("passo-proximo");
-const botaoPlay = document.getElementById("passo-play");
-
-let passoAtual = 0;        // número do passo que está na tela
-let temporizador = null;   // guarda o "relógio" do modo Reproduzir (null = parado)
-
-
-// ===== 1C: mostrar um passo =====
-
-function mostrarPasso(numero) {
-    passoAtual = numero;
-    const passo = passos[numero];
-
-    // 1. Apaga os destaques e os visores do passo anterior
-    const partes = diagramaVer.querySelectorAll(".bloco, .seta");
-    for (let i = 0; i < partes.length; i++) {
-        partes[i].classList.remove("ativo");
-    }
-    const visores = diagramaVer.querySelectorAll(".visor");
-    for (let i = 0; i < visores.length; i++) {
-        visores[i].textContent = "";
-    }
-
-    // 2. Acende as partes deste passo
-    for (let i = 0; i < passo.destaque.length; i++) {
-        document.getElementById(passo.destaque[i]).classList.add("ativo");
-    }
-
-    // 3. Escreve nos visores deste passo
-    for (let i = 0; i < passo.visores.length; i++) {
-        const caixa = document.getElementById(passo.visores[i].id);
-        caixa.querySelector(".visor").textContent = passo.visores[i].texto;
-    }
-
-    // 4. Se alguma parte está acesa, as outras ficam apagadinhas (classe no CSS)
-    if (passo.destaque.length > 0) {
-        diagramaVer.classList.add("tem-destaque");
-    } else {
-        diagramaVer.classList.remove("tem-destaque");
-    }
-
-    // 5. Textos embaixo do diagrama
-    contadorPasso.textContent = "Passo " + numero + " de " + (passos.length - 1);
-    tituloPasso.textContent = passo.titulo;
-    textoPasso.textContent = passo.texto;
-
-    // 6. Desativa "Anterior" no primeiro passo e "Próximo" no último
-    botaoAnterior.disabled = (numero === 0);
-    botaoProximo.disabled = (numero === passos.length - 1);
-}
-
-
-// ===== 1D: botões Anterior, Próximo e Reproduzir =====
-
-// Para o modo Reproduzir e volta o botão ao normal
-function pararReproducao() {
-    clearInterval(temporizador);
-    temporizador = null;
-    botaoPlay.textContent = "▶ Reproduzir";
-}
-
-// Usada pelo modo Reproduzir: avança um passo, ou para quando chega no fim
-function avancarSozinho() {
-    if (passoAtual < passos.length - 1) {
-        mostrarPasso(passoAtual + 1);
-    } else {
-        pararReproducao();
-    }
-}
-
-botaoAnterior.addEventListener("click", function () {
-    pararReproducao();
-    mostrarPasso(passoAtual - 1);
-});
-
-botaoProximo.addEventListener("click", function () {
-    pararReproducao();
-    mostrarPasso(passoAtual + 1);
-});
-
-botaoPlay.addEventListener("click", function () {
-    if (temporizador === null) {
-        // Estava parado: começa (se já estava no fim, recomeça do início)
-        if (passoAtual === passos.length - 1) {
-            mostrarPasso(0);
-        }
-        // setInterval chama a função a cada 3000 milissegundos (3 segundos)
-        temporizador = setInterval(avancarSozinho, 3000);
-        botaoPlay.textContent = "❚❚ Pausar";
-        avancarSozinho();
-    } else {
-        // Estava reproduzindo: pausa
-        pararReproducao();
-    }
-});
-
-// Mostra o primeiro passo quando a página abre
-mostrarPasso(0);
-
-
-// =================== PARTE 2: MONTAR O PROCESSADOR ===================
-
-// ===== 2A: as peças =====
+// ===== PARTE A: as peças =====
 // id: igual ao data-vaga do espaço certo no HTML
 // explicacao: aparece quando o jogador encaixa a peça no lugar certo
 const pecas = [
@@ -190,7 +22,7 @@ const pecas = [
 ];
 
 
-// ===== 2B: elementos da página e estado do jogo =====
+// ===== PARTE B: elementos da página e estado do jogo =====
 
 const bandeja = document.getElementById("bandeja");
 const vagas = document.querySelectorAll(".vaga");
@@ -207,7 +39,7 @@ for (let i = 0; i < vagas.length; i++) {
 }
 
 
-// ===== 2C: funções de apoio =====
+// ===== PARTE C: funções de apoio =====
 
 // Procura a peça pelo id (ex.: "ula") e devolve o objeto dela
 function buscarPeca(id) {
@@ -247,7 +79,7 @@ function atualizarContadorPecas() {
 }
 
 
-// ===== 2D: escolher uma peça (clique ou toque) =====
+// ===== PARTE D: escolher uma peça (clique ou toque) =====
 
 function selecionarPeca(elemento) {
     // Tira a marca da peça que estava escolhida antes
@@ -268,7 +100,7 @@ function selecionarPeca(elemento) {
 }
 
 
-// ===== 2E: tentar encaixar uma peça numa vaga =====
+// ===== PARTE E: tentar encaixar uma peça numa vaga =====
 
 function tentarEncaixar(idPeca, vaga) {
     // Vaga já preenchida: não faz nada
@@ -315,7 +147,7 @@ function tentarEncaixar(idPeca, vaga) {
 }
 
 
-// ===== 2F: criar as peças na bandeja =====
+// ===== PARTE F: criar as peças na bandeja =====
 
 function montarBandeja() {
     bandeja.innerHTML = "";
@@ -349,7 +181,7 @@ function montarBandeja() {
 }
 
 
-// ===== 2G: eventos das vagas =====
+// ===== PARTE G: eventos das vagas =====
 
 for (let i = 0; i < vagas.length; i++) {
     const vaga = vagas[i];
@@ -381,7 +213,7 @@ for (let i = 0; i < vagas.length; i++) {
 }
 
 
-// ===== 2H: recomeçar =====
+// ===== PARTE H: recomeçar =====
 
 function recomecarMontagem() {
     // Esvazia as vagas: volta só com a dica

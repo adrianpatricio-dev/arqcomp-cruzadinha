@@ -93,64 +93,12 @@
         <section id="secao-processador" class="secao" hidden>
             <div class="cabecalho-secao">
                 <h2>Processador</h2>
-                <p>Veja como as partes do computador trabalham juntas e depois monte o processador você mesmo.</p>
+                <p>Você sabe onde fica cada parte do computador? Coloque cada peça no seu lugar.</p>
             </div>
 
-            <!-- ----- Parte 1: ver funcionando ----- -->
+            <!-- ----- Jogo: montar o processador arrastando as peças ----- -->
             <div class="cartao bloco-processador">
-                <h3>1. Veja como funciona</h3>
-                <p class="instrucao">Acompanhe, passo a passo, o computador fazendo a conta <strong>2 + 3</strong>.</p>
-
-                <!-- Diagrama: Entrada e saída ↔ CPU (ULA, UC, Registradores) ↔ Memória.
-                     Os "visores" ficam vazios: o processador.js escreve neles a cada passo -->
-                <div class="diagrama" id="diagrama-ver">
-                    <div class="bloco bloco-fora cor-es" id="v-es">
-                        <span class="nome-bloco">Entrada e saída</span>
-                        <span class="visor"></span>
-                    </div>
-                    <div class="seta" id="v-seta-es" aria-hidden="true"><span class="pulso"></span></div>
-                    <div class="cpu">
-                        <span class="nome-cpu">CPU</span>
-                        <div class="bloco cor-ula" id="v-ula">
-                            <span class="nome-bloco">ULA</span>
-                            <span class="legenda">calcula</span>
-                            <span class="visor"></span>
-                        </div>
-                        <div class="bloco cor-uc" id="v-uc">
-                            <span class="nome-bloco">UC</span>
-                            <span class="legenda">comanda</span>
-                            <span class="visor"></span>
-                        </div>
-                        <div class="bloco bloco-largo cor-registradores" id="v-registradores">
-                            <span class="nome-bloco">Registradores</span>
-                            <span class="legenda">guardam dados na hora</span>
-                            <span class="visor"></span>
-                        </div>
-                    </div>
-                    <div class="seta" id="v-seta-mem" aria-hidden="true"><span class="pulso"></span></div>
-                    <div class="bloco bloco-fora cor-memoria" id="v-memoria">
-                        <span class="nome-bloco">Memória</span>
-                        <span class="visor"></span>
-                    </div>
-                </div>
-
-                <!-- Texto do passo atual -->
-                <div class="explicacao-passo">
-                    <p id="contador-passo" class="contador-passo"></p>
-                    <h4 id="titulo-passo"></h4>
-                    <p id="texto-passo"></p>
-                </div>
-
-                <div class="controles-passo">
-                    <button id="passo-anterior" class="botao botao-secundario">◀ Anterior</button>
-                    <button id="passo-play" class="botao botao-principal">▶ Reproduzir</button>
-                    <button id="passo-proximo" class="botao botao-secundario">Próximo ▶</button>
-                </div>
-            </div>
-
-            <!-- ----- Parte 2: montar arrastando ----- -->
-            <div class="cartao bloco-processador">
-                <h3>2. Agora monte você</h3>
+                <h3>Monte o processador</h3>
                 <p class="instrucao">Arraste cada peça até o espaço certo (no celular: toque na peça e depois no espaço).
                    A dica embaixo de cada espaço ajuda!</p>
 

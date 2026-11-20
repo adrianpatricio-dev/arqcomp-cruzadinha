@@ -794,7 +794,7 @@ h1 {
     color: var(--cor-texto-suave);
 }
 
-/* --- Cores de cada parte (usadas nas caixas, nas peças e nas vagas preenchidas) --- */
+/* --- Cores de cada parte (usadas nas peças e nas vagas preenchidas) --- */
 .cor-ula {
     background: var(--cor-azul-claro);
     border-color: var(--cor-azul);
@@ -853,66 +853,14 @@ h1 {
     letter-spacing: 1px;
 }
 
-/* Registradores ocupam as duas colunas da CPU */
+/* O espaço dos Registradores ocupa as duas colunas da CPU */
 .bloco-largo {
     grid-column: 1 / 3;
 }
 
-/* Caixas de fora (Entrada e saída, Memória) um pouco mais altas */
+/* Espaços de fora (Entrada e saída, Memória) um pouco mais altos */
 .bloco-fora {
     min-height: 96px;
-}
-
-/* --- Caixas do diagrama "Veja como funciona" --- */
-.bloco {
-    min-height: 76px;
-    padding: 10px;
-    border-width: 2px;          /* a cor da borda vem da classe cor-... */
-    border-style: solid;        /* (por isso não usamos o atalho "border", que apagaria a cor) */
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
-}
-
-.nome-bloco {
-    font-weight: 700;
-    font-size: 1.05rem;
-}
-
-.legenda {
-    font-size: 0.8rem;
-    opacity: 0.8;
-}
-
-/* Visorzinho onde aparecem os valores (2 + 3, R1 = 2...). Vazio = escondido */
-.visor {
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: var(--cor-azul);
-    color: #ffffff;
-    font-family: var(--fonte-mono);
-    font-size: 0.8rem;
-    animation: aparecer 0.3s ease both;
-}
-
-.visor:empty {
-    display: none;
-}
-
-/* Parte acesa no passo atual: cresce um pouco e ganha um "halo" azul */
-.bloco.ativo {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 5px rgba(29, 78, 216, 0.25);
-}
-
-/* Quando alguma parte está acesa, as outras ficam apagadinhas */
-.tem-destaque .bloco:not(.ativo) {
-    opacity: 0.4;
 }
 
 /* --- Setas de ida e volta (os barramentos), feitas com CSS --- */
@@ -942,64 +890,6 @@ h1 {
 .seta::after {                  /* ponta da direita */
     right: -4px;
     border-left: 10px solid currentColor;
-}
-
-/* Seta acesa: fica azul e uma bolinha corre de um lado para o outro (dado passando) */
-.seta.ativo {
-    background: var(--cor-azul);
-    color: var(--cor-azul);
-}
-
-.pulso {
-    display: none;
-}
-
-.seta.ativo .pulso {
-    display: block;
-    position: absolute;
-    top: -4px;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--cor-azul);
-    box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.25);
-    animation: viajar 1.2s ease-in-out infinite alternate;
-}
-
-/* --- Texto e botões dos passos --- */
-.explicacao-passo {
-    margin-top: 18px;
-    padding: 14px 16px;
-    border-left: 4px solid var(--cor-azul);
-    border-radius: 8px;
-    background: var(--cor-azul-claro);
-    min-height: 96px;
-}
-
-.contador-passo {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--cor-azul);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.explicacao-passo h4 {
-    margin: 2px 0 4px;
-    font-size: 1.1rem;
-}
-
-.explicacao-passo p:last-child {
-    margin: 0;
-}
-
-.controles-passo {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 16px;
 }
 
 /* --- Jogo de montar --- */
@@ -1176,23 +1066,6 @@ h1 {
         border-top: 10px solid currentColor;
     }
 
-    .seta.ativo .pulso {
-        top: 0;
-        left: -4px;
-        animation-name: viajar-vertical;
-    }
-}
-
-/* Bolinha andando pela seta: da esquerda para a direita... */
-@keyframes viajar {
-    from { left: 0; }
-    to   { left: calc(100% - 11px); }
-}
-
-/* ...ou de cima para baixo, no celular */
-@keyframes viajar-vertical {
-    from { top: 0; }
-    to   { top: calc(100% - 11px); }
 }
 
 /* Vaga recebendo a peça certa: dá um "pulinho" */
