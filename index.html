@@ -21,6 +21,13 @@
                     <p class="subtitulo">Cruzadinha de Arquitetura Computacional</p>
                 </div>
             </div>
+
+            <!-- Menu: cada botão mostra uma seção (o script.js troca qual aparece) -->
+            <nav class="menu" aria-label="Seções do jogo">
+                <button class="aba ativa" data-secao="secao-cruzadinha">Cruzadinha</button>
+                <button class="aba" data-secao="secao-processador">Processador</button>
+                <button class="aba" data-secao="secao-glossario">Glossário</button>
+            </nav>
         </div>
     </header>
 
@@ -79,6 +86,27 @@
             </div>
         </section>
 
+        <!-- ===================== GLOSSÁRIO ===================== -->
+        <!-- "hidden": começa escondida; aparece quando clicam em "Glossário" no menu -->
+        <section id="secao-glossario" class="secao" hidden>
+            <div class="cabecalho-secao">
+                <h2>Glossário</h2>
+                <p>O que é cada termo da cruzadinha, explicado de um jeito simples.
+                   <strong>Atenção:</strong> aqui aparecem as respostas!</p>
+            </div>
+
+            <!-- Busca e filtros (os botões de filtro são criados pelo glossario.js) -->
+            <div class="ferramentas-glossario cartao">
+                <input type="search" id="busca-glossario" placeholder="Buscar termo (ex.: memória)" aria-label="Buscar termo">
+                <div id="filtros-glossario" class="filtros"></div>
+            </div>
+
+            <p id="glossario-vazio" class="aviso-vazio" hidden>Nenhum termo encontrado.</p>
+
+            <!-- Os cartões dos termos são criados pelo glossario.js -->
+            <div id="lista-glossario" class="grade-glossario"></div>
+        </section>
+
     </main>
 
     <!-- Tela de vitória: começa escondida (hidden) e aparece quando tudo estiver certo -->
@@ -93,5 +121,6 @@
 
     <!-- O script vem por último para que os elementos acima já existam quando ele rodar -->
     <script src="script.js"></script>
+    <script src="glossario.js"></script>
 </body>
 </html>

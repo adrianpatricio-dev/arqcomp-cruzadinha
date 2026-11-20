@@ -540,3 +540,31 @@ function chuvaDeBits() {
 botaoFecharVitoria.addEventListener("click", function () {
     telaVitoria.hidden = true;
 });
+
+
+// ===== PARTE I: menu para trocar de seção =====
+// Cada botão do menu tem um data-secao com o id da seção que ele mostra.
+// Trocar de seção só esconde/mostra: a cruzadinha não perde o que foi digitado.
+
+const abas = document.querySelectorAll(".aba");
+const secoes = document.querySelectorAll(".secao");
+
+for (let i = 0; i < abas.length; i++) {
+    abas[i].addEventListener("click", function () {
+        const idDaSecao = abas[i].dataset.secao;
+
+        // Esconde todas as seções e mostra só a escolhida
+        for (let j = 0; j < secoes.length; j++) {
+            secoes[j].hidden = (secoes[j].id !== idDaSecao);
+        }
+
+        // Marca só o botão clicado como ativo
+        for (let j = 0; j < abas.length; j++) {
+            abas[j].classList.remove("ativa");
+        }
+        abas[i].classList.add("ativa");
+
+        // Volta para o topo da página
+        window.scrollTo(0, 0);
+    });
+}

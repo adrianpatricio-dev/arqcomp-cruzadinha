@@ -618,3 +618,169 @@ h1 {
 @keyframes cair {
     to { transform: translateY(110vh) rotate(180deg); }
 }
+
+/* ===== Menu (abas no topo) ===== */
+.menu {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 10px;
+    background: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+}
+
+.aba {
+    font-family: var(--fonte-texto);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--cor-texto-suave);
+    cursor: pointer;
+}
+
+.aba:hover {
+    color: var(--cor-texto);
+}
+
+/* Aba da seção que está aparecendo: preta com letra branca */
+.aba.ativa {
+    background: var(--cor-preto);
+    color: #ffffff;
+}
+
+/* No celular o menu ocupa a largura toda e as abas dividem o espaço */
+@media (max-width: 640px) {
+    .menu {
+        width: 100%;
+    }
+
+    .aba {
+        flex: 1;
+        padding: 8px 6px;
+    }
+}
+
+/* Título e explicação no começo de cada seção extra */
+.cabecalho-secao {
+    margin-bottom: 20px;
+}
+
+.cabecalho-secao h2 {
+    margin: 0 0 4px;
+    font-size: 1.5rem;
+}
+
+.cabecalho-secao p {
+    margin: 0;
+    color: var(--cor-texto-suave);
+}
+
+/* ===== Glossário ===== */
+.ferramentas-glossario {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+#busca-glossario {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 14px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 8px;
+    font-family: var(--fonte-texto);
+    font-size: 1rem;
+}
+
+#busca-glossario:focus {
+    outline: none;
+    border-color: var(--cor-azul);
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Botões de filtro em formato de "pílula" */
+.filtro {
+    font-family: var(--fonte-texto);
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 999px;     /* bem arredondado */
+    background: var(--cor-cartao);
+    color: var(--cor-texto);
+    cursor: pointer;
+}
+
+.filtro.ativo {
+    background: var(--cor-azul);
+    border-color: var(--cor-azul);
+    color: #ffffff;
+}
+
+/* Grade de cartões: cabem quantos cartões de 260px a largura deixar */
+.grade-glossario {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.termo-glossario {
+    padding: 16px 18px;
+    background: var(--cor-cartao);
+    border: 1px solid var(--cor-borda);
+    border-top: 4px solid var(--cor-azul);   /* faixa de cor no topo: muda por categoria */
+    border-radius: 12px;
+    box-shadow: var(--sombra);
+    animation: aparecer 0.3s ease both;
+}
+
+/* Cor da faixa de cada categoria */
+.termo-glossario.cat-processador  { border-top-color: var(--cor-azul); }
+.termo-glossario.cat-memorias     { border-top-color: var(--cor-preto); }
+.termo-glossario.cat-barramentos  { border-top-color: #60a5fa; }
+
+.termo-glossario h3 {
+    margin: 6px 0 2px;
+    font-size: 1.2rem;
+}
+
+.termo-glossario p {
+    margin: 8px 0 0;
+    font-size: 0.93rem;
+}
+
+/* Linha da sigla por extenso: menor e em itálico */
+.termo-glossario .sigla {
+    margin-top: 0;
+    color: var(--cor-azul-escuro);
+    font-size: 0.82rem;
+    font-style: italic;
+}
+
+.etiqueta {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--cor-azul-claro);
+    color: var(--cor-azul-escuro);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.aviso-vazio {
+    padding: 24px;
+    text-align: center;
+    color: var(--cor-texto-suave);
+}
