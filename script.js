@@ -109,6 +109,10 @@ for (let l = 0; l < LINHAS; l++) {
             campos[l].push(campo);
         }
 
+        // Animação de "ligar" (no style.css): quanto mais longe do canto de cima,
+        // mais tarde a casa aparece. Isso faz uma onda descendo pelo tabuleiro
+        casa.style.animationDelay = (l + c) * 20 + "ms";
+
         tabuleiro.appendChild(casa);
     }
 }
@@ -213,6 +217,12 @@ function limparMarcacoes() {
 
 function conferir() {
     limparMarcacoes();
+
+    // Truque para a animação repetir quando o jogador confere de novo:
+    // ler o tamanho do tabuleiro obriga o navegador a "registrar" que as classes saíram,
+    // e aí, quando elas voltam logo abaixo, a animação começa do zero
+    void tabuleiro.offsetWidth;
+
     let acertos = 0;
 
     // 1º passo: descobre quais palavras estão certas
@@ -239,6 +249,7 @@ function conferir() {
         if (!p.certa) {
             const lista = camposDaPalavra(p);
             for (let j = 0; j < lista.length; j++) {
+                lista[j].style.animationDelay = "0ms";  // todas as letras tremem juntas
                 lista[j].classList.add("errada");
             }
             p.item.classList.add("errada");
@@ -250,6 +261,8 @@ function conferir() {
         if (p.certa) {
             const lista = camposDaPalavra(p);
             for (let j = 0; j < lista.length; j++) {
+                // Cada letra acende 60ms depois da anterior: a palavra "acende" em sequência
+                lista[j].style.animationDelay = (j * 60) + "ms";
                 lista[j].classList.remove("errada");
                 lista[j].classList.add("certa");
             }
@@ -260,8 +273,10 @@ function conferir() {
 
     // Atualiza o contador e a barra
     atualizarContador(acertos);
+
+    // Acertou todas: mostra a tela de vitória (PARTE H)
     if (acertos === palavras.length) {
-        contador.textContent = contador.textContent + " — parabéns, você completou tudo!";
+        mostrarVitoria();
     }
 }
 
@@ -282,9 +297,10 @@ function reiniciar() {
         }
     }
 
-    // Tira as cores e as marcas ✔/✘, e zera o contador
+    // Tira as cores e as marcas ✔/✘, zera o contador e esconde a vitória
     limparMarcacoes();
     atualizarContador(0);
+    telaVitoria.hidden = true;
 
     // Volta o cursor para a primeira palavra
     campos[palavras[0].linha][palavras[0].coluna].focus();
@@ -478,3 +494,49 @@ for (let l = 0; l < LINHAS; l++) {
         });
     }
 }
+
+
+// ===== PARTE H: tela de vitória e chuva de bits =====
+
+const telaVitoria = document.getElementById("vitoria");
+const botaoFecharVitoria = document.getElementById("botao-fechar-vitoria");
+
+function mostrarVitoria() {
+    telaVitoria.hidden = false;
+    chuvaDeBits();
+    botaoFecharVitoria.focus();
+}
+
+// Cria vários "0" e "1" que caem do topo da tela (a queda é a animação "cair" no CSS)
+function chuvaDeBits() {
+    for (let i = 0; i < 40; i++) {
+        const bit = document.createElement("span");
+        bit.classList.add("bit");
+
+        // Math.random() sorteia um número entre 0 e 1:
+        // menor que 0.5 vira "0", senão vira "1"
+        if (Math.random() < 0.5) {
+            bit.textContent = "0";
+        } else {
+            bit.textContent = "1";
+        }
+
+        // Posição, tamanho, velocidade e atraso sorteados: cada bit cai de um jeito
+        bit.style.left = Math.random() * 100 + "vw";
+        bit.style.fontSize = (14 + Math.random() * 16) + "px";
+        bit.style.animationDuration = (2 + Math.random() * 2) + "s";
+        bit.style.animationDelay = (Math.random() * 0.8) + "s";
+
+        document.body.appendChild(bit);
+
+        // Depois de 5 segundos o bit já caiu: remove da página para não acumular
+        setTimeout(function () {
+            bit.remove();
+        }, 5000);
+    }
+}
+
+// Botão "Continuar": fecha a tela de vitória
+botaoFecharVitoria.addEventListener("click", function () {
+    telaVitoria.hidden = true;
+});

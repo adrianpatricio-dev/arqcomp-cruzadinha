@@ -65,6 +65,16 @@
         </section>
     </main>
 
+    <!-- Tela de vitória: começa escondida (hidden) e aparece quando tudo estiver certo -->
+    <div id="vitoria" hidden>
+        <div class="cartao-vitoria">
+            <div class="selo-vitoria" aria-hidden="true">✔</div>
+            <h2>Sistema 100% operacional!</h2>
+            <p>Você acertou todas as palavras da cruzadinha.</p>
+            <button id="botao-fechar-vitoria">Continuar</button>
+        </div>
+    </div>
+
     <!-- O script vem por último para que os elementos acima já existam quando ele rodar -->
     <script src="script.js"></script>
 </body>
