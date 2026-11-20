@@ -4,28 +4,48 @@
 const LINHAS = 16;
 const COLUNAS = 15;
 
-// Texto provisório das pistas que ainda vão ser escritas
-const PISTA_PENDENTE = "(pista a escrever)";
-
 // Cada objeto é uma palavra: onde começa (linha e coluna, contando a partir de 0),
-// para onde vai ("H" = horizontal, "V" = vertical) e a pista que aparece na tela
+// para onde vai ("H" = horizontal, "V" = vertical) e a pista que aparece na tela.
+//
+// ATENÇÃO - PISTAS EM RASCUNHO:
+// as pistas com "rascunho: true" são provisórias e ainda vão ser reescritas
+// com as minhas palavras (regras do PDF: no máximo 15 palavras, sem a resposta,
+// sem a sigla por extenso e levando a uma única resposta).
+// Enquanto for true, aparece uma etiqueta "rascunho" ao lado da pista na tela.
+// Depois de reescrever uma pista, troque para "rascunho: false".
 const palavras = [
-    { numero: 1,  palavra: "MEMORIADEMASSA",   linha: 0,  coluna: 2,  direcao: "V", pista: PISTA_PENDENTE },
-    { numero: 2,  palavra: "MICROCONTROLADOR", linha: 0,  coluna: 11, direcao: "V", pista: PISTA_PENDENTE },
-    { numero: 3,  palavra: "DMA",              linha: 2,  coluna: 1,  direcao: "H", pista: PISTA_PENDENTE },
-    { numero: 4,  palavra: "CPU",              linha: 2,  coluna: 11, direcao: "H", pista: PISTA_PENDENTE },
-    { numero: 5,  palavra: "CACHE",            linha: 3,  coluna: 9,  direcao: "V", pista: "Memória rápida entre o processador e a memória principal, com os dados mais usados." },
-    { numero: 6,  palavra: "REGISTRADORES",    linha: 4,  coluna: 2,  direcao: "H", pista: PISTA_PENDENTE },
-    { numero: 7,  palavra: "EEPROM",           linha: 4,  coluna: 13, direcao: "V", pista: PISTA_PENDENTE },
-    { numero: 8,  palavra: "ADDRESSBUS",       linha: 5,  coluna: 0,  direcao: "V", pista: PISTA_PENDENTE },
-    { numero: 9,  palavra: "DATABUS",          linha: 6,  coluna: 4,  direcao: "V", pista: PISTA_PENDENTE },
-    { numero: 10, palavra: "UC",               linha: 6,  coluna: 6,  direcao: "V", pista: PISTA_PENDENTE },
-    { numero: 11, palavra: "DUALCORE",         linha: 7,  coluna: 2,  direcao: "H", pista: PISTA_PENDENTE },
-    { numero: 12, palavra: "RAM",              linha: 7,  coluna: 8,  direcao: "V", pista: PISTA_PENDENTE },
-    { numero: 13, palavra: "ROM",              linha: 9,  coluna: 11, direcao: "H", pista: PISTA_PENDENTE },
-    { numero: 14, palavra: "FLASH",            linha: 12, coluna: 9,  direcao: "H", pista: PISTA_PENDENTE },
-    { numero: 15, palavra: "ULA",              linha: 13, coluna: 0,  direcao: "H", pista: PISTA_PENDENTE },
-    { numero: 16, palavra: "QUADCORE",         linha: 15, coluna: 5,  direcao: "H", pista: PISTA_PENDENTE }
+    { numero: 1,  palavra: "MEMORIADEMASSA",   linha: 0,  coluna: 2,  direcao: "V", rascunho: true,
+      pista: "Guarda arquivos de forma permanente e em grande quantidade, como HD e SSD." },
+    { numero: 2,  palavra: "MICROCONTROLADOR", linha: 0,  coluna: 11, direcao: "V", rascunho: true,
+      pista: "Chip único com processador, memória e periféricos, usado em sistemas embarcados como Arduino." },
+    { numero: 3,  palavra: "DMA",              linha: 2,  coluna: 1,  direcao: "H", rascunho: true,
+      pista: "Recurso que deixa um dispositivo transferir informações sem precisar da ajuda do processador." },
+    { numero: 4,  palavra: "CPU",              linha: 2,  coluna: 11, direcao: "H", rascunho: true,
+      pista: "Cérebro do computador: busca, decodifica e executa as instruções dos programas." },
+    { numero: 5,  palavra: "CACHE",            linha: 3,  coluna: 9,  direcao: "V", rascunho: false,
+      pista: "Memória rápida entre o processador e a memória principal, com os dados mais usados." },
+    { numero: 6,  palavra: "REGISTRADORES",    linha: 4,  coluna: 2,  direcao: "H", rascunho: true,
+      pista: "Pequenas memórias dentro do processador, as mais rápidas de toda a hierarquia." },
+    { numero: 7,  palavra: "EEPROM",           linha: 4,  coluna: 13, direcao: "V", rascunho: true,
+      pista: "Memória permanente que pode ser regravada byte a byte, ideal para guardar configurações." },
+    { numero: 8,  palavra: "ADDRESSBUS",       linha: 5,  coluna: 0,  direcao: "V", rascunho: true,
+      pista: "Vias que indicam em qual posição da memória o processador vai ler ou escrever." },
+    { numero: 9,  palavra: "DATABUS",          linha: 6,  coluna: 4,  direcao: "V", rascunho: true,
+      pista: "Vias que levam os valores lidos ou escritos entre o processador e a memória." },
+    { numero: 10, palavra: "UC",               linha: 6,  coluna: 6,  direcao: "V", rascunho: true,
+      pista: "Parte do processador que coordena as outras, dizendo o que fazer a cada passo." },
+    { numero: 11, palavra: "DUALCORE",         linha: 7,  coluna: 2,  direcao: "H", rascunho: true,
+      pista: "Processador com duas unidades de execução independentes dentro do mesmo chip." },
+    { numero: 12, palavra: "RAM",              linha: 7,  coluna: 8,  direcao: "V", rascunho: true,
+      pista: "Memória principal e volátil, onde ficam os aplicativos que estão abertos." },
+    { numero: 13, palavra: "ROM",              linha: 9,  coluna: 11, direcao: "H", rascunho: true,
+      pista: "Memória gravada na fábrica, que o usuário não consegue alterar." },
+    { numero: 14, palavra: "FLASH",            linha: 12, coluna: 9,  direcao: "H", rascunho: true,
+      pista: "Memória permanente regravável em blocos, usada em pendrives e cartões SD." },
+    { numero: 15, palavra: "ULA",              linha: 13, coluna: 0,  direcao: "H", rascunho: true,
+      pista: "Parte do processador que soma, subtrai e compara valores." },
+    { numero: 16, palavra: "QUADCORE",         linha: 15, coluna: 5,  direcao: "H", rascunho: true,
+      pista: "Processador com quatro unidades de execução independentes dentro do mesmo chip." }
 ];
 
 
@@ -110,16 +130,26 @@ for (let i = 0; i < palavras.length; i++) {
 const listaHorizontais = document.getElementById("pistas-horizontais");
 const listaVerticais = document.getElementById("pistas-verticais");
 
-// Monta o texto de uma pista, por exemplo: "5. Memória rápida..."
-function textoDaPista(p) {
-    return p.numero + ". " + p.pista;
+// Escreve a pista na lista, por exemplo: "5. Memória rápida..."
+// "marca" é o que vem no fim: "" (nada), " ✔" (certa) ou " ✘" (errada)
+function mostrarPista(p, marca) {
+    p.item.textContent = p.numero + ". " + p.pista + marca;
+
+    // Pista ainda em rascunho: coloca a etiqueta "rascunho" no final
+    if (p.rascunho) {
+        const selo = document.createElement("span");
+        selo.classList.add("selo-rascunho");
+        selo.textContent = "rascunho";
+        p.item.appendChild(selo);
+    }
 }
 
 for (let i = 0; i < palavras.length; i++) {
     const p = palavras[i];
 
     const item = document.createElement("li");
-    item.textContent = textoDaPista(p);
+    p.item = item;        // guarda o item dentro da própria palavra, para usar depois
+    mostrarPista(p, "");
 
     // Clicar na pista seleciona a palavra e leva o cursor para a primeira casa vazia dela
     // (as funções selecionarPalavra e primeiraCasaVazia estão na PARTE G)
@@ -134,9 +164,6 @@ for (let i = 0; i < palavras.length; i++) {
     } else {
         listaVerticais.appendChild(item);
     }
-
-    // Guarda o item dentro da própria palavra, para marcar certo/errado depois
-    p.item = item;
 }
 
 
@@ -180,7 +207,7 @@ function limparMarcacoes() {
             lista[j].classList.remove("certa", "errada");
         }
         p.item.classList.remove("certa", "errada");
-        p.item.textContent = textoDaPista(p);
+        mostrarPista(p, "");
     }
 }
 
@@ -215,7 +242,7 @@ function conferir() {
                 lista[j].classList.add("errada");
             }
             p.item.classList.add("errada");
-            p.item.textContent = textoDaPista(p) + " ✘";
+            mostrarPista(p, " ✘");
         }
     }
     for (let i = 0; i < palavras.length; i++) {
@@ -227,7 +254,7 @@ function conferir() {
                 lista[j].classList.add("certa");
             }
             p.item.classList.add("certa");
-            p.item.textContent = textoDaPista(p) + " ✔";
+            mostrarPista(p, " ✔");
         }
     }
 

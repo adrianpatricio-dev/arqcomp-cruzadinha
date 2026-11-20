@@ -387,6 +387,21 @@ h1 {
     background: rgba(77, 216, 232, 0.08);
 }
 
+/* Etiqueta "rascunho": lembrete de que a pista ainda vai ser reescrita.
+   Some sozinha quando a pista fica com "rascunho: false" no script.js */
+.selo-rascunho {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 5px;
+    border: 1px dashed var(--cor-cobre);
+    border-radius: 3px;
+    color: var(--cor-cobre);
+    font-family: var(--fonte-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
 /* Pista da palavra selecionada agora */
 #pistas li.ativa {
     background: rgba(77, 216, 232, 0.15);
