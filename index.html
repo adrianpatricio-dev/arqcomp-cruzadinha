@@ -5,38 +5,64 @@
     <meta charset="UTF-8">
     <!-- Faz a página se ajustar à largura do celular -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cruzadinha de Arquitetura Computacional</title>
+    <title>Circuito Cruzado · Cruzadinha de Arquitetura Computacional</title>
     <!-- Liga o arquivo de estilos -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Cruzadinha de Arquitetura Computacional</h1>
+    <!-- ===== Topo: logo, nome do jogo e LEDs decorativos ===== -->
+    <header class="topo">
+        <!-- Desenho de um chip, feito só com CSS (aria-hidden: o leitor de tela ignora) -->
+        <div class="chip-logo" aria-hidden="true"><span>01</span></div>
 
-    <!-- Botões do jogo e o contador de acertos -->
-    <div id="controles">
-        <button id="botao-conferir">Conferir</button>
-        <button id="botao-reiniciar">Reiniciar</button>
-        <p id="contador"></p>
-    </div>
+        <div class="titulos">
+            <h1>Circuito Cruzado</h1>
+            <p class="subtitulo">Cruzadinha de Arquitetura Computacional</p>
+        </div>
+
+        <!-- Três "LEDs" que piscam, só para enfeitar -->
+        <div class="leds" aria-hidden="true">
+            <span class="led"></span>
+            <span class="led"></span>
+            <span class="led"></span>
+        </div>
+    </header>
 
     <main id="jogo">
-        <!-- Fica vazia: o script.js cria as casas aqui dentro -->
-        <div id="tabuleiro"></div>
+        <!-- Coluna da esquerda: botões, contador e tabuleiro -->
+        <section class="coluna-tabuleiro">
+            <!-- Botões do jogo e o contador de acertos -->
+            <div id="controles">
+                <button id="botao-conferir">Conferir</button>
+                <button id="botao-reiniciar">Reiniciar</button>
 
-        <!-- As listas também ficam vazias: o script.js coloca as pistas -->
+                <div class="placar">
+                    <p id="contador"></p>
+                    <!-- Barra de progresso: o script.js muda a largura da parte preenchida -->
+                    <div class="barra" aria-hidden="true">
+                        <div id="barra-preenchida"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fica vazia: o script.js cria as casas aqui dentro -->
+            <div id="tabuleiro"></div>
+        </section>
+
+        <!-- Coluna da direita: as listas ficam vazias, o script.js coloca as pistas -->
         <section id="pistas">
-            <div>
+            <div class="bloco-pistas">
                 <h2>Horizontais</h2>
                 <ul id="pistas-horizontais"></ul>
             </div>
-            <div>
+            <div class="bloco-pistas">
                 <h2>Verticais</h2>
                 <ul id="pistas-verticais"></ul>
             </div>
         </section>
     </main>
 
-    <!-- O script vem por último para que a div acima já exista quando ele rodar -->
+    <!-- O script vem por último para que os elementos acima já existam quando ele rodar -->
     <script src="script.js"></script>
 </body>
 </html>

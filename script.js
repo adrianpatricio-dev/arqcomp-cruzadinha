@@ -137,10 +137,20 @@ for (let i = 0; i < palavras.length; i++) {
 // ===== PARTE E: botão Conferir e contador de acertos =====
 
 const contador = document.getElementById("contador");
+const barraPreenchida = document.getElementById("barra-preenchida");
 const botaoConferir = document.getElementById("botao-conferir");
 
+// Escreve "X de 16 palavras" e enche a barra de progresso na mesma proporção
+function atualizarContador(acertos) {
+    contador.textContent = acertos + " de " + palavras.length + " palavras";
+
+    // Regra de três: acertos / total * 100 = porcentagem da barra
+    const porcentagem = acertos / palavras.length * 100;
+    barraPreenchida.style.width = porcentagem + "%";
+}
+
 // Começa mostrando zero acertos
-contador.textContent = "0 de " + palavras.length + " palavras";
+atualizarContador(0);
 
 // Devolve a lista de campos (inputs) de uma palavra, na ordem das letras
 function camposDaPalavra(p) {
@@ -215,8 +225,8 @@ function conferir() {
         }
     }
 
-    // Atualiza o contador
-    contador.textContent = acertos + " de " + palavras.length + " palavras";
+    // Atualiza o contador e a barra
+    atualizarContador(acertos);
     if (acertos === palavras.length) {
         contador.textContent = contador.textContent + " — parabéns, você completou tudo!";
     }
@@ -241,7 +251,7 @@ function reiniciar() {
 
     // Tira as cores e as marcas ✔/✘, e zera o contador
     limparMarcacoes();
-    contador.textContent = "0 de " + palavras.length + " palavras";
+    atualizarContador(0);
 
     // Volta o cursor para a primeira palavra
     campos[palavras[0].linha][palavras[0].coluna].focus();
