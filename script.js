@@ -78,9 +78,13 @@ for (let l = 0; l < LINHAS; l++) {
             casa.classList.add("vazia");
             campos[l].push(null);
         } else {
-            // Casa com letra: vira um campo que aceita só 1 caractere
+            // Casa com letra: vira um campo de digitar
+            // (quem garante que fica só 1 letra é a PARTE G, no evento "input")
             const campo = document.createElement("input");
-            campo.maxLength = 1;
+            campo.autocomplete = "off";       // o navegador não sugere palavras
+            campo.spellcheck = false;         // sem sublinhado vermelho de ortografia
+            campo.setAttribute("autocapitalize", "characters"); // teclado do celular em maiúsculas
+            campo.setAttribute("aria-label", "Linha " + (l + 1) + ", coluna " + (c + 1));
             casa.appendChild(campo);
             campos[l].push(campo);
         }
@@ -117,9 +121,11 @@ for (let i = 0; i < palavras.length; i++) {
     const item = document.createElement("li");
     item.textContent = textoDaPista(p);
 
-    // Clicar na pista leva o cursor para a primeira casa da palavra
+    // Clicar na pista seleciona a palavra e leva o cursor para a primeira casa vazia dela
+    // (as funções selecionarPalavra e primeiraCasaVazia estão na PARTE G)
     item.addEventListener("click", function () {
-        campos[p.linha][p.coluna].focus();
+        selecionarPalavra(p);
+        primeiraCasaVazia(p).focus();
     });
 
     // Cada pista vai para a lista da sua direção
@@ -258,3 +264,190 @@ function reiniciar() {
 }
 
 botaoReiniciar.addEventListener("click", reiniciar);
+
+
+// ===== PARTE G: jogar pelo teclado e destacar a palavra atual =====
+
+const caixaPistaAtual = document.getElementById("pista-atual");
+
+let palavraAtual = null;  // a palavra que o jogador está preenchendo agora
+let direcaoAtual = "H";   // direção preferida: "H" ou "V"
+
+// Devolve as palavras que passam por um campo (1 palavra, ou 2 se for um cruzamento)
+function palavrasDoCampo(campo) {
+    const lista = [];
+    for (let i = 0; i < palavras.length; i++) {
+        if (camposDaPalavra(palavras[i]).includes(campo)) {
+            lista.push(palavras[i]);
+        }
+    }
+    return lista;
+}
+
+// Devolve a primeira casa vazia da palavra (ou a primeira casa, se estiver toda preenchida)
+function primeiraCasaVazia(p) {
+    const lista = camposDaPalavra(p);
+    for (let j = 0; j < lista.length; j++) {
+        if (lista[j].value === "") {
+            return lista[j];
+        }
+    }
+    return lista[0];
+}
+
+// Marca uma palavra como a "atual": pinta as casas, destaca a pista e mostra o texto em cima
+function selecionarPalavra(p) {
+    // 1. Tira o destaque da palavra anterior
+    if (palavraAtual !== null) {
+        const anteriores = camposDaPalavra(palavraAtual);
+        for (let j = 0; j < anteriores.length; j++) {
+            anteriores[j].classList.remove("atual");
+        }
+        palavraAtual.item.classList.remove("ativa");
+    }
+
+    // 2. Guarda a nova palavra e a direção dela
+    palavraAtual = p;
+    direcaoAtual = p.direcao;
+
+    // 3. Destaca as casas e a pista da nova palavra
+    const novas = camposDaPalavra(p);
+    for (let j = 0; j < novas.length; j++) {
+        novas[j].classList.add("atual");
+    }
+    p.item.classList.add("ativa");
+
+    // 4. Escreve a pista na caixa em cima do tabuleiro
+    let nomeDirecao = "Vertical";
+    if (p.direcao === "H") {
+        nomeDirecao = "Horizontal";
+    }
+    caixaPistaAtual.innerHTML = "<strong>" + p.numero + " · " + nomeDirecao + "</strong>" + p.pista;
+}
+
+// Anda dentro da palavra atual: passo 1 = próxima casa, passo -1 = casa anterior
+function andarNaPalavra(campo, passo) {
+    const lista = camposDaPalavra(palavraAtual);
+    const posicao = lista.indexOf(campo);
+    const destino = lista[posicao + passo];
+
+    // Se passou do começo ou do fim da palavra, "destino" fica undefined e não faz nada
+    if (destino !== undefined) {
+        destino.focus();
+    }
+    return destino;
+}
+
+// Liga os eventos de teclado e mouse em cada campo do tabuleiro
+for (let l = 0; l < LINHAS; l++) {
+    for (let c = 0; c < COLUNAS; c++) {
+        const campo = campos[l][c];
+        if (campo === null) {
+            continue; // casa vazia: não tem campo, pula para a próxima
+        }
+
+        // Quando o campo recebe o foco (clique, Tab ou o cursor andando sozinho)
+        campo.addEventListener("focus", function () {
+            const lista = palavrasDoCampo(campo);
+
+            // Se a palavra atual passa por aqui, continua nela.
+            // Senão, escolhe a palavra que tem a direção preferida (ou a única que tiver)
+            if (!lista.includes(palavraAtual)) {
+                let escolhida = lista[0];
+                for (let i = 0; i < lista.length; i++) {
+                    if (lista[i].direcao === direcaoAtual) {
+                        escolhida = lista[i];
+                    }
+                }
+                selecionarPalavra(escolhida);
+            }
+
+            campo.select(); // seleciona a letra: digitar outra troca a antiga
+        });
+
+        // Clicar de novo numa casa de cruzamento troca entre horizontal e vertical
+        campo.addEventListener("mousedown", function () {
+            const lista = palavrasDoCampo(campo);
+            if (document.activeElement === campo && lista.length === 2) {
+                if (lista[0] === palavraAtual) {
+                    selecionarPalavra(lista[1]);
+                } else {
+                    selecionarPalavra(lista[0]);
+                }
+            }
+        });
+
+        // Toda vez que o jogador digita algo no campo
+        campo.addEventListener("input", function () {
+            // Pega só o último caractere e deixa em maiúscula
+            let letra = campo.value.slice(-1).toUpperCase();
+
+            // Aceita só letras de A a Z (sem acento, número ou símbolo)
+            if (letra < "A" || letra > "Z") {
+                letra = "";
+            }
+            campo.value = letra;
+
+            // Se mudou a letra, a cor de certo/errado dessa casa não vale mais
+            campo.classList.remove("certa", "errada");
+
+            // Digitou uma letra válida: o cursor pula sozinho para a próxima casa
+            if (letra !== "") {
+                andarNaPalavra(campo, 1);
+            }
+        });
+
+        // Teclas especiais: Backspace e setas
+        campo.addEventListener("keydown", function (evento) {
+            const tecla = evento.key;
+
+            // Backspace numa casa vazia: volta uma casa e apaga a letra de lá
+            if (tecla === "Backspace" && campo.value === "") {
+                evento.preventDefault();
+                const anterior = andarNaPalavra(campo, -1);
+                if (anterior !== undefined) {
+                    anterior.value = "";
+                    anterior.classList.remove("certa", "errada");
+                }
+                return;
+            }
+
+            // Setas: descobre para que lado andar (dl = linhas, dc = colunas)
+            let dl = 0;
+            let dc = 0;
+            if (tecla === "ArrowRight") { dc = 1; }
+            if (tecla === "ArrowLeft")  { dc = -1; }
+            if (tecla === "ArrowDown")  { dl = 1; }
+            if (tecla === "ArrowUp")    { dl = -1; }
+
+            if (dl === 0 && dc === 0) {
+                return; // não era seta: deixa o navegador agir normalmente
+            }
+            evento.preventDefault(); // impede a página de rolar com as setas
+
+            // Setas para os lados preferem a horizontal; para cima/baixo, a vertical
+            if (dc !== 0) {
+                direcaoAtual = "H";
+            } else {
+                direcaoAtual = "V";
+            }
+
+            // Vai para a casa vizinha, se ela existir e tiver letra
+            const novaLinha = l + dl;
+            const novaColuna = c + dc;
+            const dentro = novaLinha >= 0 && novaLinha < LINHAS && novaColuna >= 0 && novaColuna < COLUNAS;
+            if (dentro && campos[novaLinha][novaColuna] !== null) {
+                const vizinho = campos[novaLinha][novaColuna];
+
+                // Se o vizinho tem uma palavra na direção da seta, já seleciona ela
+                const lista = palavrasDoCampo(vizinho);
+                for (let i = 0; i < lista.length; i++) {
+                    if (lista[i].direcao === direcaoAtual) {
+                        selecionarPalavra(lista[i]);
+                    }
+                }
+                vizinho.focus();
+            }
+        });
+    }
+}

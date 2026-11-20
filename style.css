@@ -236,6 +236,29 @@ h1 {
     transition: width 0.6s ease;
 }
 
+/* ===== Pista atual (em cima do tabuleiro) ===== */
+#pista-atual {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: calc(var(--tamanho) * 15 + 70px);  /* mesma largura do tabuleiro */
+    min-height: 3em;
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--cor-destaque);
+    border-radius: 8px;
+    background: rgba(77, 216, 232, 0.08);
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* "3 · HORIZONTAL" em destaque antes do texto da pista */
+#pista-atual strong {
+    font-family: var(--fonte-mono);
+    color: var(--cor-destaque);
+    margin-right: 6px;
+}
+
 /* ===== Tabuleiro ===== */
 /* 15 colunas, cada uma com o --tamanho (igual a COLUNAS no script.js) */
 #tabuleiro {
@@ -278,6 +301,13 @@ h1 {
     padding: 0;
     caret-color: transparent; /* esconde o cursor piscando */
     transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Casas da palavra que o jogador está preenchendo agora: contorno ciano.
+   Vem antes de certa/errada para que essas cores "ganhem" dela */
+.casa input.atual {
+    background-color: #123a3a;
+    border-color: var(--cor-destaque);
 }
 
 /* Depois de Conferir: verde para casas de palavras certas, vermelho para erradas */
@@ -355,6 +385,12 @@ h1 {
 
 #pistas li:hover {
     background: rgba(77, 216, 232, 0.08);
+}
+
+/* Pista da palavra selecionada agora */
+#pistas li.ativa {
+    background: rgba(77, 216, 232, 0.15);
+    box-shadow: inset 3px 0 0 var(--cor-destaque);  /* risquinho ciano na esquerda */
 }
 
 /* Pistas depois de Conferir */
